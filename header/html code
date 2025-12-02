@@ -49,3 +49,30 @@
             </div>
         </div>
     </div>
+
+    <script>
+    const searchToggle = document.getElementById("searchToggle");
+    const searchClose = document.getElementById("searchClose");
+    const searchBar = document.getElementById("searchBar");
+    const rightDefault = document.getElementById("rightDefault");
+
+    function openSearch() {
+        rightDefault.classList.add("hidden");
+        searchBar.classList.add("active");
+    }
+
+    function closeSearch() {
+        searchBar.classList.remove("active");
+        rightDefault.classList.remove("hidden");
+    }
+
+    searchToggle.addEventListener("click", () => {
+        if (searchBar.classList.contains("active")) {
+            closeSearch();
+        } else {
+            openSearch();
+        }
+    });
+
+    searchClose.addEventListener("click", closeSearch);
+    </script>
