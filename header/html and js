@@ -11,9 +11,9 @@
         <!-- NAV BUTTONS -->
         <div class="nav-buttons">
             <a href="About Us.html" class="nav-button">About Us</a>
-            <a href="Products.html" class="nav-button">Products</a>
+            <a href="productline.html" class="nav-button">Products</a>
             <a href="Reviews.html" class="nav-button">Reviews</a>
-            <a href="Orders.html" class="nav-button">Orders</a>
+            <a href="Contact Us.html" class="nav-button">Contact Us</a>
         </div>
 
         <!-- RIGHT SIDE: Login / Create Account / Basket / Search -->
@@ -50,6 +50,19 @@
         </div>
     </div>
 
+    <!-- MAIN CONTENT -->
+    <div class="hero">
+        <div>
+            <h1>Welcome to EveryWear</h1>
+            <p>Your one-stop shop for all your fashion needs. Explore our collections and find the perfect outfit for any occasion.</p>
+        </div>
+        <div class="hero-buttons">
+            <a href="productline.html" class="category-btn">Tops</a>
+            <a href="productline.html" class="category-btn">Bottoms</a>
+            <a href="productline.html" class="category-btn">Accessories</a>
+        </div>
+    </div>
+
     <script>
     const searchToggle = document.getElementById("searchToggle");
     const searchClose = document.getElementById("searchClose");
@@ -76,3 +89,6 @@
 
     searchClose.addEventListener("click", closeSearch);
     </script>
+
+
+USE THIS INSIDE BODY OF HTML FOR THE HEADER AND USE THE SAME IMAGES INSIDE THE IMAGES FOLDER
