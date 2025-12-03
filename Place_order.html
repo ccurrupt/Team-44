@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order – EveryWear</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .order-wrapper {
+            max-width: 480px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .order-wrapper h1 {
+            text-align: center;
+            color: #7ac6d9;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .order-wrapper h2 {
+            margin-top: 25px;
+            margin-bottom: 10px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .order-wrapper label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .order-wrapper input,
+        .order-wrapper select {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #d9d9d9;
+            margin-bottom: 20px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .place-order-btn {
+            width: 100%;
+            background: black;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .place-order-btn:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <div class="logo-section">
+            <a href="EveryWear Homepage.html" class="logo-link" aria-label="Go to homepage">
+                <img src="images/logo.png" loading="eager" alt="EveryWear Logo" width="120" height="90" class="site-logo">
+            </a>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="About Us.html" class="nav-button">About Us</a>
+            <a href="Products.html" class="nav-button">Products</a>
+            <a href="Reviews.html" class="nav-button">Reviews</a>
+            <a href="Orders.html" class="nav-button active">Orders</a>
+        </div>
+
+        <div class="right-controls">
+            <a href="Login.html" class="login-btn">Log in</a>
+            <a href="create-account.html" class="create-btn">
+                <img src="images/account.png" alt="" class="btn-icon">
+                Create Account
+            </a>
+
+            <a href="Basket.html" class="icon-link">
+                <img src="images/basket.png" alt="Basket" class="nav-icon">
+            </a>
+
+            <div class="icon-link">
+                <img src="images/search.png" alt="Search" class="nav-icon">
+            </div>
+        </div>
+    </div>
+
+    <div class="order-wrapper">
+
+        <h1>EVERYWEAR</h1>
+
+        <form>
+
+            <h2>Shipping Information</h2>
+
+            <label>Full Name</label>
+            <input type="text" placeholder="Enter your full name" required>
+
+            <label>Email</label>
+            <input type="email" placeholder="Enter your email address" required>
+
+            <label>Phone Number</label>
+            <input type="text" placeholder="Enter your phone number" required>
+
+            <label>Address Line 1</label>
+            <input type="text" placeholder="Enter your address" required>
+
+            <label>Address Line 2 (Optional)</label>
+            <input type="text" placeholder="Apartment, suite, etc.">
+
+            <label>City</label>
+            <input type="text" placeholder="Enter your city" required>
+
+            <label>Postal Code</label>
+            <input type="text" placeholder="Enter your postal code" required>
+
+            <h2>Payment Details</h2>
+
+            <label>Card Holder Name</label>
+            <input type="text" placeholder="Name on card" required>
+
+            <label>Card Number</label>
+            <input type="text" placeholder="XXXX XXXX XXXX XXXX" required>
+
+            <label>Expiry Date</label>
+            <input type="text" placeholder="MM/YY" required>
+
+            <label>CVC</label>
+            <input type="text" placeholder="3-digit code" required>
+
+            <button type="submit" class="place-order-btn">Place Order</button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>
