@@ -11,9 +11,9 @@
         <!-- NAV BUTTONS -->
         <div class="nav-buttons">
             <a href="About Us.html" class="nav-button">About Us</a>
-            <a href="Products.html" class="nav-button">Products</a>
+            <a href="productline.html" class="nav-button">Products</a>
             <a href="Reviews.html" class="nav-button">Reviews</a>
-            <a href="Orders.html" class="nav-button">Orders</a>
+            <a href="Contact Us.html" class="nav-button">Contact Us</a>
         </div>
 
         <!-- RIGHT SIDE: Login / Create Account / Basket / Search -->
@@ -35,3 +35,6 @@
             </div>
         </div>
     </div>
+
+
+USE THIS INSIDE BODY AND USE THE SAME IMAGES INSIDE AN IMAGES FOLDER
