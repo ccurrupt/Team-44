@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order – EveryWear</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR (copied exactly from your existing code) -->
+    <div class="navbar">
+
+        <div class="logo-section">
+            <a href="EveryWear Homepage.html" class="logo-link" aria-label="Go to homepage">
+                <img src="images/logo.png" loading="eager" alt="EveryWear Logo" width="120" height="90" class="site-logo">
+            </a>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="About Us.html" class="nav-button">About Us</a>
+            <a href="Products.html" class="nav-button">Products</a>
+            <a href="Reviews.html" class="nav-button">Reviews</a>
+            <a href="Orders.html" class="nav-button active">Orders</a>
+        </div>
+
+        <div class="right-controls" id="rightControls">
+
+            <div class="right-default" id="rightDefault">
+                <a href="Login.html" class="login-btn">Log in</a>
+                <a href="create-account.html" class="create-btn">
+                    <img src="images/account.png" alt="" class="btn-icon">
+                    Create Account
+                </a>
+
+                <a href="Basket.html" class="icon-link">
+                    <img src="images/basket.png" alt="Basket" class="nav-icon">
+                </a>
+
+                <div class="icon-link search-icon" id="searchToggle">
+                    <img src="images/search.png" alt="Search" class="nav-icon">
+                </div>
+            </div>
+
+            <div id="searchBar" class="search-bar-overlay">
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <div class="icon-link search-close" id="searchClose">
+                <img src="images/search.png" alt="Close Search" class="nav-icon">
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="hero about-hero" style="height:auto; margin-top:20px;">
+        <div class="about-content">
+
+            <h1>Place Your Order</h1>
+            <p>Fill in your details below to complete your purchase. Your items will be shipped as soon as your order is confirmed.</p>
+
+            <form class="order-form">
+
+                <h2>Shipping Information</h2>
+                <label>Full Name</label>
+                <input type="text" required>
+
+                <label>Email</label>
+                <input type="email" required>
+
+                <label>Phone Number</label>
+                <input type="text" required>
+
+                <label>Address Line 1</label>
+                <input type="text" required>
+
+                <label>Address Line 2 (Optional)</label>
+                <input type="text">
+
+                <label>City</label>
+                <input type="text" required>
+
+                <label>Postal Code</label>
+                <input type="text" required>
+
+                <hr>
+
+                <h2>Payment Details</h2>
+
+                <label>Card Holder Name</label>
+                <input type="text" required>
+
+                <label>Card Number</label>
+                <input type="text" placeholder="XXXX XXXX XXXX XXXX" required>
+
+                <div class="card-row">
+                    <div>
+                        <label>Expiry Date</label>
+                        <input type="text" placeholder="MM/YY" required>
+                    </div>
+
+                    <div>
+                        <label>CVC</label>
+                        <input type="text" required>
+                    </div>
+                </div>
+
+                <hr>
+
+                <button type="submit" class="place-order-btn">Place Order</button>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- SEARCH SCRIPT -->
+    <script>
+    const searchToggle = document.getElementById("searchToggle");
+    const searchClose = document.getElementById("searchClose");
+    const searchBar = document.getElementById("searchBar");
+    const rightDefault = document.getElementById("rightDefault");
+
+    function openSearch() {
+        rightDefault.classList.add("hidden");
+        searchBar.classList.add("active");
+    }
+
+    function closeSearch() {
+        searchBar.classList.remove("active");
+        rightDefault.classList.remove("hidden");
+    }
+
+    searchToggle.addEventListener("click", () => {
+        if (searchBar.classList.contains("active")) {
+            closeSearch();
+        } else {
+            openSearch();
+        }
+    });
+
+    searchClose.addEventListener("click", closeSearch);
+    </script>
+
+</body>
+</html>

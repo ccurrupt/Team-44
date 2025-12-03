@@ -1,0 +1,63 @@
+/* ORDER FORM */
+.order-form {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.order-form label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.order-form input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+.order-form input:focus {
+    border-color: #4b74ff;
+}
+
+.card-row {
+    display: flex;
+    gap: 20px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 20px 0;
+}
+
+.summary-box {
+    background: #f3f5f7;
+    padding: 16px;
+    border-radius: 10px;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.place-order-btn {
+    padding: 14px;
+    background: linear-gradient(to right, #30CDF5, #00FAA0);
+    border: none;
+    color: black;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.place-order-btn:hover {
+    transform: scale(1.03);
+    opacity: 0.9;
+}
