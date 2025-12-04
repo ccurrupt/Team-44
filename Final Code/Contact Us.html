@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us – EveryWear</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .contact-wrapper {
+            max-width: 480px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .contact-wrapper h1 {
+            text-align: center;
+            color: #7ac6d9;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .contact-wrapper label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .contact-wrapper input,
+        .contact-wrapper textarea {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #d9d9d9;
+            margin-bottom: 20px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .contact-wrapper textarea {
+            height: 140px;
+            resize: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: black;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <div class="logo-section">
+            <a href="EveryWear Homepage.html" class="logo-link" aria-label="Go to homepage">
+                <img src="images/logo.png" loading="eager" alt="EveryWear Logo" width="120" height="90" class="site-logo">
+            </a>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="About Us.html" class="nav-button">About Us</a>
+            <a href="Products.html" class="nav-button">Products</a>
+            <a href="Reviews.html" class="nav-button">Reviews</a>
+            <a href="Contact Us.html" class="nav-button active">Contact</a>
+        </div>
+
+        <div class="right-controls">
+            <a href="Login.html" class="login-btn">Log in</a>
+            <a href="create-account.html" class="create-btn">
+                <img src="images/account.png" alt="" class="btn-icon">
+                Create Account
+            </a>
+
+            <a href="Basket.html" class="icon-link">
+                <img src="images/basket.png" alt="Basket" class="nav-icon">
+            </a>
+
+            <div class="icon-link">
+                <img src="images/search.png" alt="Search" class="nav-icon">
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-wrapper">
+
+        <h1>EVERYWEAR</h1>
+
+        <form>
+
+            <label>Your Name</label>
+            <input type="text" placeholder="Enter your full name" required>
+
+            <label>Email Address</label>
+            <input type="email" placeholder="Enter your email address" required>
+
+            <label>Subject</label>
+            <input type="text" placeholder="Enter the subject" required>
+
+            <label>Message</label>
+            <textarea placeholder="Type your message here..." required></textarea>
+
+            <button type="submit" class="submit-btn">Send Message</button>
+
+        </form>
+
+        <!-- Message sent notification -->
+        <p id="msgSent" style="display:none; color: green; font-weight: bold; text-align:center; margin-top:10px;">
+            Message sent!
+        </p>
+
+    </div>
+
+    <script>
+        const form = document.querySelector("form");
+        const msg = document.getElementById("msgSent");
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // stop page reload
+            msg.style.display = "block"; // show message
+
+            // hide after 3 seconds
+            setTimeout(() => {
+                msg.style.display = "none";
+            }, 3000);
+        });
+    </script>
+
+</body>
+</html>
