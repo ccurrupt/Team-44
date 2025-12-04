@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
-
         .contact-wrapper {
             max-width: 480px;
             margin: 40px auto;
@@ -118,7 +117,27 @@
 
         </form>
 
+        <!-- Message sent notification -->
+        <p id="msgSent" style="display:none; color: green; font-weight: bold; text-align:center; margin-top:10px;">
+            Message sent!
+        </p>
+
     </div>
+
+    <script>
+        const form = document.querySelector("form");
+        const msg = document.getElementById("msgSent");
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // stop page reload
+            msg.style.display = "block"; // show message
+
+            // hide after 3 seconds
+            setTimeout(() => {
+                msg.style.display = "none";
+            }, 3000);
+        });
+    </script>
 
 </body>
 </html>
