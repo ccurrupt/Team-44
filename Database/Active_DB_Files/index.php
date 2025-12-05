@@ -418,7 +418,7 @@ footer {
         <a href="orders.php" class="nav-button">Orders</a>
     </div>
     
-    <!-- RIGHT CONTROLS -->
+    <!-- RIGHTSIDE CONTROLS -->
     <div class="right-controls">
         <?php if($isLoggedIn): ?>
             <!-- User is logged in -->
