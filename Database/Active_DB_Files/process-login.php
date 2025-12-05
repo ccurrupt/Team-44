@@ -6,26 +6,26 @@ require_once 'dbconfig.php';  // Include the PDO connection
 $email = trim($_POST['email'] ?? '');
 $password = $_POST['password'] ?? '';
 
-// Validate input
+// Validate the input
 if (empty($email) || empty($password)) {
     header("Location: login.php?error=empty_fields");
     exit();
 }
 
 try {
-    // Prepare and execute query using PDO
+    // Prepare and execute using PDO
     $sql = "SELECT user_id, first_name, last_name, email, password FROM Users WHERE email = :email";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
     $stmt->execute();
     
-    // Check if user exists
+    // Checks if user exists
     if ($stmt->rowCount() === 0) {
         header("Location: login.php?error=no_user");
         exit();
     }
     
-    // Get user data
+    // Gets the user data
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // Verify password
