@@ -1,11 +1,8 @@
 <?php
-// public_html/orders.php
-// Orders page: shows all orders for the logged-in user
-// and uses the same style of header + cart as the product page.
 
 require_once 'dbconfig.php';   // gives us $pdo and starts the session
 
-// Simple flags for login state (used by header)
+// flags for login state (used by header)
 $isLoggedIn = isset($_SESSION['user_id']);
 $userId     = $isLoggedIn ? (int) $_SESSION['user_id'] : 0;
 $userName   = $isLoggedIn ? ($_SESSION['first_name'] ?? 'User') : '';
@@ -135,7 +132,7 @@ foreach ($_SESSION['cart'] as $item) {
             margin-right: 8px;
         }
 
-        /* --- Cart sidebar styling (simplified version of product page) --- */
+        /* --- Cart sidebar styling  --- */
 
         .cart-sidebar {
             position: fixed;
@@ -242,7 +239,7 @@ foreach ($_SESSION['cart'] as $item) {
     </div>
 
     <div class="right-controls">
-        <!-- We know user is logged in on this page, but keep it friendly -->
+        <!-- We know user is logged in on this page, so we say Hi -->
         <span class="welcome-msg">Hi <?php echo htmlspecialchars($userName); ?>!</span>
         <a href="logout.php" class="login-btn">Logout</a>
 
@@ -254,7 +251,7 @@ foreach ($_SESSION['cart'] as $item) {
     </div>
 </div>
 
-<!-- CART SIDEBAR (read-only summary) -->
+<!-- CART SIDEBAR -->
 <div class="cart-sidebar" id="cartSidebar">
     <h2>Your Cart</h2>
 
@@ -331,7 +328,7 @@ foreach ($_SESSION['cart'] as $item) {
 </main>
 
 <script>
-// Very small bit of JS just to open/close the cart sidebar
+//JS to open/close the cart sidebar
 
 const cartToggle = document.getElementById('cartToggle');
 const cartSidebar = document.getElementById('cartSidebar');
