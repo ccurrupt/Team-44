@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EveryWear - Reviews</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css"
+    rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", Arial, sans-serif;
+    background-color: #f7f8fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-y: scroll; /* Ensures scrollbar reserve space, preventing flicker */
+
+}
+
+/* Make widths include padding so elements won't overflow the viewport */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Prevent horizontal scroll by default */
+html, body { overflow-x: hidden; }
+
+/* NAVBAR */
+.navbar {
+    width: 100%;
+    background: white;
+    /* Use auto height to match homepage */
+    height: auto;
+    padding: 4px 24px; /* reduce vertical padding to make navbar shorter */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* match homepage layout */
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    overflow: visible; /* larger logo can overflow visually */
+}
+
+.navbar::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px; /* adjust thickness here */
+    background: linear-gradient(to right, #30CDF5, #00FAA0);
+}
+
+/* Internal container to keep layout consistent across pages */
+/* .nav-inner removed; navbar uses padding to control layout */
+
+/* LOGO */
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 100%; /* vertical centering inside the fixed navbar */
+    min-width: 120px; /* ensure logo has enough space but not too wide */
+}
+
+.logo-section img {
+    height: 90px; /* size of everywear logo */
+}
+
+.brand {
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #28d5d5, #4a99ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    display: inline-block;
+}
+
+/* NAV BUTTONS */
+.nav-buttons {
+    display: flex;
+    gap: 20px; /* match homepage spacing */
+    margin-left: 0; /* ensure nav buttons stay aligned next to logo */
+    flex: 1 1 auto; /* allow nav buttons to shrink/grow */
+    min-width: 0; /* allow children to shrink */
+}
+
+/* NAV BUTTONS — gradient hover + scale */
+.nav-buttons a.nav-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 25px;
+    background: #e7e9eb;
+    border-radius: 7px;
+    text-decoration: none;
+    color: inherit;
+    font-size: 14px;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+    transform: translateY(-2px);
+}
+
+.nav-buttons a.nav-button:hover,
+.nav-buttons a.nav-button:focus {
+    background: linear-gradient(to right, #30CDF5, #00FAA0);
+    color: #000;
+    transform: translateY(-2px) scale(1.07); /* small enlargement */
+    outline: none;
+}
+
+
+/* Active nav link styling */
+.nav-buttons a.nav-button.active {
+    background-color: #31F8B3;
+    color: #000; /* black text for contrast on light green */
+}
+
+/* Push the right-side controls to the far right, keeping nav buttons lefted-aligned */
+.right-controls { margin-left: auto; }
+
+/* main button style block appears below with the improved transitions */
+
+.nav-buttons button {
+    padding: 10px 25px;
+    background: #e7e9eb;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+    /* keep buttons visually lifted even when not hovered */
+    transform: translateY(-2px);
+}
+
+.nav-buttons a.nav-button.active {
+    background-color: #4b74ff;   /* blue colour when active */
+    color: #ffffff;              /* white text for contrast */
+}
+
+/* Hover state ALWAYS overrides, even on active buttons */
+.nav-buttons a.nav-button:hover,
+.nav-buttons a.nav-button:focus {
+    background: linear-gradient(to right, #30CDF5, #00FAA0);
+    color: #000 !important;        /* force black text on hover */
+    transform: translateY(-2px) scale(1.07);
+    outline: none;
+}
+
+/* RIGHT CONTROL BUTTONS */
+.right-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* slightly tighter spacing to bring icons closer together */
+    min-width: 0; /* allow shrink */
+}
+
+/* Container holds both states (default icons + search bar) */
+.right-controls {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+/* DEFAULT RIGHT SIDE (login, create, basket, search) */
+.right-default {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* SEARCH BAR INLINE VERSION */
+.search-bar-inline {
+    display: none;          /* hidden initially */
+    align-items: center;
+    gap: 10px;
+    width: 260px;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.search-bar-inline.active {
+    display: flex;
+}
+
+/* Replaced old .search-input (bottom of CSS) with this version */
+.search-bar-inline .search-input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* Animated hide */
+.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+}
+
+/* ensure the nav button sections are centered with the fixed navbar */
+.nav-buttons, .right-controls {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* LOGIN BUTTON */
+.login-btn {
+    background: #4b74ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+    transform: translateY(-2px);
+}
+
+.login-btn:hover {
+    background: linear-gradient(to right, #30CDF5, #00FAA0);
+    color: #000;
+    transform: translateY(-2px) scale(1.07);
+}
+    .login-btn:active { transform: translateY(0); }
+
+/* CREATE ACCOUNT BUTTON */
+.create-btn {
+    background: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+    transform: translateY(-2px);
+}
+
+.create-btn:hover {
+    background: linear-gradient(to right, #30CDF5, #00FAA0);
+    color: #000;
+    transform: translateY(-2px) scale(1.07);
+}
+    .create-btn:active { transform: translateY(0); }
+
+.login-btn,
+.create-btn {
+    text-decoration: none;   /* remove underline */
+}
+
+/* ICONS */
+/* ICON WRAPPER LINK */
+.icon-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    width: 36px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* PNG ICON IMAGE */
+.nav-icon {
+    width: 22px;     /* same visual size as emoji */
+    height: 22px;
+    object-fit: contain;
+    pointer-events: none; /* keeps click on the link, not on the img */
+}
+
+/* HOVER EFFECT */
+#searchToggle:hover {
+    transform: scale(1.15);
+}
+
+.icon-link:hover {
+    transform: scale(1.15);
+    opacity: 0.9;
+}
+
+.search-close:hover {
+    transform: translateY(-50%) scale(1.15) !important;
+}
+
+/* HERO SECTION */
+.hero {
+    margin: 16px auto;
+    width: 95%;
+    height: max-content;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;      /* stack content vertically */
+    justify-content: flex-start; /* push content to the top */
+    align-items: center;         /* keep buttons centered horizontally */
+    padding-top: 40px;           /* adjust how far from the top */
+    font-size: 26px;
+    color: #999;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+    animation: fadeIn 0.6s ease;
+}
+
+/* SMOOTH FADE-IN ANIMATION */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.site-logo {
+    height: 90px;
+    width: auto;
+    margin-left: 18px;  /* shift the logo slightly to the right */
+    margin-right: 0; /* reset right margin */
+}
+
+.logo-link { display: inline-flex; align-items: center; cursor: pointer; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+/* Don't show a visible outline on mouse click */
+.logo-link:focus { outline: none; }
+/* Keep a visible outline for keyboard users (a11y) */
+.logo-link:focus-visible { outline: 3px solid rgba(75,116,255,0.25); border-radius: 6px; }
+.logo-link:active { outline: none; }
+
+/* AV: Prevent collision of big logo with the nav buttons - margin handled earlier */
+
+/* Responsive adjustments so the logo doesn't dominate small screens */
+@media (max-width: 768px) {
+    .site-logo, .logo-section img {
+        height: 64px; /* scale down on tablets/phones */
+    }
+    .navbar {
+        height: 64px; /* slightly smaller navbar on mobile */
+    }
+    .logo-section { min-width: 140px; }
+}
+
+.search-bar-inline .search-input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.search-input:focus {
+    border-color: #4b74ff;
+}
+
+/* SEARCH BAR OVERLAY */
+.search-bar-overlay {
+    position: absolute;
+    right: 36px;  /* this guarantees the close icon stays in place and the search bar is to the left of it */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+    transition: width 0.3s ease, opacity 0.2s ease;
+}
+
+
+.search-bar-overlay input {
+    width: 320px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* When shown */
+.search-bar-overlay.active {
+    width: 320px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Close icon sits exactly where the normal search icon was */
+.search-close {
+    position: absolute;
+    height: 36px;
+    width: 36px;
+    right: 0;         /* SAME horizontal anchor as the original search icon */
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+    z-index: 60;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-bar-overlay.active + .search-close {
+    display: flex;    /* show close icon when search is active */
+}
+
+/* ABOUT US PAGE CUSTOM LAYOUT */
+.about-hero {
+    justify-content: flex-start;   /* content starts at the top */
+    align-items: flex-start;       /* left align content */
+    padding: 40px;                 /* spacing around text */
+    text-align: left;              /* left-aligned text */
+    height: auto;                  /* allow content to grow naturally */
+}
+
+.about-content {
+    max-width: 900px;
+    color: #000000;
+}
+
+.about-content h1 {
+    margin-top: 0;
+    text-align: left;
+    font-size: 32px;
+}
+
+.about-content h2 {
+    text-align: left;
+    font-size: 24px;
+}
+
+.about-content p {
+    text-align: left;
+    margin-top: 16px;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+/* HERO BUTTONS */
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center; /* ensure perfect centering */
+    width: 100%;
+}
+
+.category-btn {
+    padding: 10px 40px;
+    border: 3px solid black; /* thick outline */
+    background: white;
+    color: black;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 0px;
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* Hover effect: invert colors */
+.category-btn:hover {
+    background: black;
+    color: white;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+    padding: 20px;
+}
+
+.checkout-container { max-width: 800px; margin: auto; }
+
+.box { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #e3e3e3; }
+
+.box h2 { margin-bottom: 15px; }
+
+label { display: block; margin-top: 15px; font-weight: bold; }
+
+input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; margin-top: 5px; }
+
+.btn { margin-top: 20px; padding: 14px; width: 100%; background: black; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+
+.summary-item, .totals p, .totals h3 { display: flex; justify-content: space-between; margin-top: 12px; }
+
+.two-cols { display: flex; gap: 15px; }
+
+.checkout-container {
+    max-width: 800px;
+    margin: auto;
+}
+
+.box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border: 1px solid #e3e3e3;
+}
+
+.box h2 {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 5px;
+}
+
+.btn {
+    margin-top: 20px;
+    padding: 14px;
+    width: 100%;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.summary-item, .totals p, .totals h3 {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.two-cols {
+    display: flex;
+    gap: 15px;
+}
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP NAVIGATION -->
+    <div class="navbar">
+
+        <!-- LOGO -->
+        <div class="logo-section">
+            <a href="EveryWear Homepage.html" class="logo-link" aria-label="Go to homepage">
+                <img src="images/logo.png" loading="eager" alt="EveryWear Logo" width="120" height="90" class="site-logo">
+            </a>
+        </div>
+
+        <!-- NAV BUTTONS -->
+        <div class="nav-buttons">
+            <a href="About Us.html" class="nav-button">About Us</a>
+            <a href="productline.html" class="nav-button">Products</a>
+            <a href="reviews.html" class="nav-button active">Reviews</a>
+            <a href="Contact Us.html" class="nav-button">Contact Us</a>
+        </div>
+
+        <!-- RIGHT SIDE: Login / Create Account / Basket / Search -->
+        <div class="right-controls" id="rightControls">
+
+
+            <!-- Default icons (visible normally) -->
+            <div class="right-default" id="rightDefault">
+                <a href="Login.html" class="login-btn">Log in</a>
+                <a href="create-account.html" class="create-btn">Create Account</a>
+
+                <a href="productdescrip.html#open-cart.html" class="icon-link">
+                    <img src="images/basket.png" alt="Basket" class="nav-icon">
+                </a>
+
+                <div class="icon-link search-icon" id="searchToggle">
+                    <img src="images/search.png" alt="Search" class="nav-icon">
+                </div>
+            </div>
+
+            <!-- Search bar overlay (hidden until search opens) -->
+            <div id="searchBar" class="search-bar-overlay">
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <!-- Close icon (only visible when search is open) -->
+            <div class="icon-link search-close" id="searchClose">
+                <img src="images/search.png" alt="Close Search" class="nav-icon">
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="hero">
+    <div style="text-align:center; max-width: 800px;">
+
+        <!-- REVIEW FORM -->
+        <div style="margin-top: 30px; text-align:left;">
+            <h2 style="text-align:center;">Leave a Review</h2>
+            <form id="reviewForm">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" placeholder="John Doe" required>
+
+                <label for="rating">Rating (1-5)</label>
+                <input type="number" id="rating" min="1" max="5" placeholder="5" required>
+
+                <label for="review">Your Review</label>
+                <textarea id="review" rows="4" placeholder="Write your review here..." required style="width:100%; padding:12px; border-radius:6px; border:1px solid #ccc; margin-top:5px;"></textarea>
+
+                <button type="submit" class="btn">Submit Review</button>
+            </form>
+        </div>
+
+        <!-- REVIEWS LIST -->
+        <div id="reviewsList" style="margin-top: 40px; text-align:left;">
+            <!-- Preloaded reviews will appear here -->
+            </div>
+    </div>
+</div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="productline.html?category=Tops">Tops</a></li>
+                    <li><a href="productline.html?category=Bottoms">Bottoms</a></li>
+                    <li><a href="productline.html?category=Outerwear">Outerwear</a></li>
+                    <li><a href="productline.html?category=Footwear">Footwear</a></li>
+                    <li><a href="productline.html?category=Accessories">Accessories</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="productline.html">Delivery & Returns</a></li>
+                    <li><a href="login.html">10% Student Discount</a></li>
+                    <li><a href="Contact Us.html">FAQs</a></li>
+                    <li><a href="login.html">My Account</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Join Now</h4>
+                <ul>
+                <li><a href="create-account.html">Become a member today and get exclusive benefits!</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col footer-col-right">
+                <h4>EveryWear</h4>
+                <p>Designed for all.</p>
+                <p>Follow Us On:</p>
+                <div class="footer-socials">
+                    <i class="ri-instagram-line"></i>
+                    <i class="ri-tiktok-line"></i>
+                    <i class="ri-youtube-line"></i>
+                </div>
+
+                <div class="footer-app">
+                    <h5>Download Our App</h5>
+                    <div class="store-badges">
+                        <a href="#">
+                        <img src="images/image1.png" alt="Get it on Google Play">
+                        </a>
+                        <a href="#">
+                        <img src="images/image2.png" alt="Download on the App Store">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 EveryWear. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+    const searchToggle = document.getElementById("searchToggle");
+    const searchClose = document.getElementById("searchClose");
+    const searchBar = document.getElementById("searchBar");
+    const rightDefault = document.getElementById("rightDefault");
+
+    function openSearch() {
+        rightDefault.classList.add("hidden");
+        searchBar.classList.add("active");
+    }
+
+    function closeSearch() {
+        searchBar.classList.remove("active");
+        rightDefault.classList.remove("hidden");
+    }
+
+    searchToggle.addEventListener("click", () => {
+        if (searchBar.classList.contains("active")) {
+            closeSearch();
+        } else {
+            openSearch();
+        }
+    });
+
+    searchClose.addEventListener("click", closeSearch);
+
+    const reviewForm = document.getElementById("reviewForm");
+    const reviewsList = document.getElementById("reviewsList");
+
+    reviewForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const rating = parseInt(document.getElementById("rating").value);
+        const reviewText = document.getElementById("review").value.trim();
+
+        if (!name || !rating || !reviewText) return;
+
+        // Create review card
+        const reviewCard = document.createElement("div");
+        reviewCard.style.borderTop = "1px solid #eee";
+        reviewCard.style.padding = "10px 0";
+
+        reviewCard.innerHTML = `
+            <p><strong>${name}</strong> <span style="color: #f5b50a;">${"★".repeat(rating)}${"☆".repeat(5-rating)}</span></p>
+            <p style="margin-top:5px;">${reviewText}</p>
+        `;
+
+        // Add to reviews list
+        if (reviewsList.querySelector("p") && reviewsList.querySelector("p").textContent.includes("No reviews")) {
+            reviewsList.innerHTML = "";
+        }
+
+        reviewsList.prepend(reviewCard);
+
+        // Reset form
+        reviewForm.reset();
+    });
+
+    let reviews = [
+    { name: "klbc1997", rating: 5, text: "I recently got the Sand Fleece Joggers and I am so impressed! They're super soft, cozy, and the fit is just right. Perfect for lounging at home or casual outings. The color is exactly as shown and they've held up well after multiple washes. Highly recommend!", helpful: 22 },
+    { name: "Sara1234", rating: 3, text: "I bought the Lightwash Denim Jorts hoping they would fit perfectly, but the sizing was a bit off and the fabric felt stiff at first. After a few washes they softened up nicely, and they do look great with casual outfits. Not perfect, but still wearable.", helpful: 5 },
+    { name: "kristinat153_6573", rating: 5, text: "Absolutely love the Boxy Logo T-Shirt! The fit is perfect, the fabric is soft, and it holds up well after multiple washes. Stylish and comfortable - definitely one of my favorite pieces!", helpful: 25 },
+    { name: "NITA1111", rating: 5, text: "These Suede Ankle Boots are amazing! They're stylish, comfortable, and easy to pair with multiple outfits. The suede feels soft, and they fit true to size. I've received so many compliments already!", helpful: 0 },
+    { name: "marlaaesthetics_3502", rating: 4, text: "The Brushed Scarf is cozy, soft, and perfect for chilly days. It pairs well with multiple outfits and adds a stylish touch to any look. The color is true to the pictures and the quality is great for the price.", helpful: 17 }
+];
+
+function renderReviews() {
+    const reviewsList = document.getElementById("reviewsList");
+    reviewsList.innerHTML = "";
+
+    if(reviews.length === 0){
+        reviewsList.innerHTML = '<p style="color: #999;">No reviews yet. Be the first to leave a review!</p>';
+        return;
+    }
+
+    reviews.forEach((r, index) => {
+        const reviewCard = document.createElement("div");
+        reviewCard.style.borderTop = "1px solid #eee";
+        reviewCard.style.padding = "10px 0";
+
+        reviewCard.innerHTML = `
+            <p><strong>${r.name}</strong> 
+            <span style="color: #f5b50a;">${"★".repeat(r.rating)}${"☆".repeat(5-r.rating)}</span></p>
+            <p style="margin-top:5px;">${r.text}</p>
+            <button class="btn" onclick="markHelpful(${index})">Helpful (${r.helpful})</button>
+        `;
+        reviewsList.appendChild(reviewCard);
+    });
+}
+
+function markHelpful(index){
+    reviews[index].helpful++;
+    renderReviews();
+}
+
+// Handle form submission
+document.getElementById("reviewForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const rating = parseInt(document.getElementById("rating").value);
+    const text = document.getElementById("review").value.trim();
+
+    if(!name || !rating || !text) return;
+
+    reviews.push({ name, rating, text, helpful: 0 });
+    renderReviews();
+    this.reset();
+});
+
+// Show preloaded reviews on page load
+renderReviews();
+    
+    </script>
+</body>
+</html>
