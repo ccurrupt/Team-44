@@ -12,29 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 $userId   = (int) $_SESSION['user_id'];
 $userName = $_SESSION['first_name'] ?? '';
 
-// ---------- Helper: normalise cart items from $_SESSION ----------
-/*
-   This tries to be flexible in case our cart structure is slightly different.
-   Expected for each item (where possible):
-   - product_id / id
-   - name      (optional, will be fetched from DB if missing)
-   - size      (optional)
-   - quantity  (defaults to 1)
-   - price     (optional, will be fetched from DB if missing)
 
-   It returns an array:
-   [
-       [
-          'product_id' => 7,
-          'name'       => 'Sand Fleece Joggers',
-          'size'       => 'XS',
-          'quantity'   => 1,
-          'price'      => 22.00,
-          'subtotal'   => 22.00
-       ],
-       ...
-   ]
-*/
 function loadCartItems(PDO $pdo): array
 {
     if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
@@ -90,7 +68,7 @@ function loadCartItems(PDO $pdo): array
     return $items;
 }
 
-// ---------- Load cart + handle POST (place order) ----------
+// ---------- Load cart ----------
 $cartItems = loadCartItems($pdo);
 $cartTotal = 0.0;
 foreach ($cartItems as $item) {
@@ -109,8 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $pdo->beginTransaction();
 
-            // Minimal insert: Orders table must have user_id and an auto-increment primary key.
-            // created_at should either have a default or be nullable.
+           
             $stmt = $pdo->prepare("INSERT INTO Orders (user_id) VALUES (:uid)");
             $stmt->execute([':uid' => $userId]);
 
