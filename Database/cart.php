@@ -17,13 +17,13 @@ $cartItems = $_SESSION['cart'];
 $total = 0;
 $cartCount = 0;
 
-// Calculate total and count
+// Calculates total and count
 foreach ($cartItems as $item) {
     $total += $item['price'] * $item['quantity'];
     $cartCount += $item['quantity'];
 }
 
-// Handle cart actions on this page
+// Will handle cart actions on this page
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
         case 'update':
