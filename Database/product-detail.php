@@ -130,11 +130,16 @@ if ($pdo) {
             }
             
             // Collect all product images 
-            $images = [];
-        if (!empty($product['image_main'])) $images[] = $product['image_main'];
-        if (!empty($product['image_1'])) $images[] = $product['image_1'];
-        if (!empty($product['image_2'])) $images[] = $product['image_2'];
-        if (!empty($product['image_3'])) $images[] = $product['image_3'];
+               // Collect all product images, avoid duplicates
+    $images = [];
+    $columns = ['image_main', 'image_1', 'image_2', 'image_3', 'image_4'];
+
+    foreach ($columns as $col) {
+        if (!empty($product[$col]) && !in_array($product[$col], $images, true)) {
+            $images[] = $product[$col];
+        }
+    }
+
 
         }
     } catch (Exception $e) {
