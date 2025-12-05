@@ -5,6 +5,7 @@ require_once 'dbconfig.php';
 $_SESSION = [];
 session_destroy();
 
-// Redirect back to the home page (PHP version)
+// Redirect back to the home page
 header("Location: index.php");
 exit();
+
