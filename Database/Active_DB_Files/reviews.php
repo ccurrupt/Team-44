@@ -1,5 +1,4 @@
 <?php
-// reviews.php
 
 require_once 'dbconfig.php';   
 
@@ -70,7 +69,7 @@ if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
         <a href="orders.php"   class="nav-button">Orders</a>
     </div>
 
-    <!-- RIGHT SIDE: login / account / cart -->
+    <!-- RIGHTSIDE: login / account / cart -->
     <div class="right-controls">
 
         <?php if ($isLoggedIn): ?>
