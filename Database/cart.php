@@ -8,7 +8,7 @@ if ($isLoggedIn && isset($_SESSION['first_name'])) {
     $userName = $_SESSION['first_name'];
 }
 
-// ALWAYS use session cart (simple for demo)
+// use session cart
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
