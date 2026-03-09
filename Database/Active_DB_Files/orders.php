@@ -21,13 +21,13 @@ if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
 // ---- Fetch this user's orders from the database ----
 try {
     $stmt = $pdo->prepare("
-        SELECT order_id, created_at
-        FROM Orders
-        WHERE user_id = :uid
-        ORDER BY created_at DESC
-    ");
-    $stmt->execute([':uid' => $userId]);
-    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    SELECT order_id, order_date, status, total_price
+    FROM Orders
+    WHERE user_id = :uid
+    ORDER BY order_date DESC
+");
+$stmt->execute([':uid' => $userId]);
+$orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log('Orders error: ' . $e->getMessage());
     $orders = [];
