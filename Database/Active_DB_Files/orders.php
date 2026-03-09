@@ -313,13 +313,12 @@ foreach ($_SESSION['cart'] as $item) {
                     <div class="order-main">
                         <h2>Order #<?php echo (int) $order['order_id']; ?></h2>
                         <div class="order-meta">
-                            Placed on:
-                            <?php echo htmlspecialchars($order['created_at']); ?>
+                            Placed on: <?php echo htmlspecialchars($order['order_date']); ?>
                         </div>
                     </div>
                     <!-- You can expand this later with real status, total, etc. -->
                     <div class="order-status">
-                        In progress
+                        <?php echo htmlspecialchars($order['status']); ?>
                     </div>
                 </article>
             <?php endforeach; ?>
