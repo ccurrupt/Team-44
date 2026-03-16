@@ -102,44 +102,44 @@
 
         <h1>EVERYWEAR</h1>
 
-        <form>
+        <form action="Database/checkout.php" method="POST">
 
             <h2>Shipping Information</h2>
 
             <label>Full Name</label>
-            <input type="text" placeholder="Enter your full name" required>
+            <input type="text" name="full_name" placeholder="Enter your full name" required>
 
             <label>Email</label>
-            <input type="email" placeholder="Enter your email address" required>
+            <input type="email" name="email" placeholder="Enter your email address" required>
 
             <label>Phone Number</label>
-            <input type="text" placeholder="Enter your phone number" required>
+            <input type="text" name="phone" placeholder="Enter your phone number" required>
 
             <label>Address Line 1</label>
-            <input type="text" placeholder="Enter your address" required>
+            <input type="text" name="address_line1" placeholder="Enter your address" required>
 
             <label>Address Line 2 (Optional)</label>
-            <input type="text" placeholder="Apartment, suite, etc.">
+            <input type="text" name="address_line2" placeholder="Apartment, suite, etc.">
 
             <label>City</label>
-            <input type="text" placeholder="Enter your city" required>
+            <input type="text" name="city" placeholder="Enter your city" required>
 
             <label>Postal Code</label>
-            <input type="text" placeholder="Enter your postal code" required>
+            <input type="text" name="postal_code" placeholder="Enter your postal code" required>
 
             <h2>Payment Details</h2>
 
             <label>Card Holder Name</label>
-            <input type="text" placeholder="Name on card" required>
+            <input type="text" name="card_holder" placeholder="Name on card" required>
 
             <label>Card Number</label>
-            <input type="text" placeholder="XXXX XXXX XXXX XXXX" required>
+            <input type="text" name="card_number" placeholder="XXXX XXXX XXXX XXXX" required>
 
             <label>Expiry Date</label>
-            <input type="text" placeholder="MM/YY" required>
+            <input type="text" name="expiry_date" placeholder="MM/YY" required>
 
             <label>CVC</label>
-            <input type="text" placeholder="3-digit code" required>
+            <input type="text" name="cvc" placeholder="3-digit code" required>
 
             <button type="submit" class="place-order-btn">Place Order</button>
 
