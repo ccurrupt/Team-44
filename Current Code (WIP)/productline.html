@@ -674,7 +674,6 @@
       transition: box-shadow 0.2s ease, transform 0.2s ease,
                   border-color 0.2s ease, background 0.2s ease;
       height: 100%;
-      position: relative
     }
 
     .product-card:hover {
@@ -682,14 +681,6 @@
       transform: translateY(-2px);
       border-color: lightgray;
       background: white;
-    }
-
-    /* Keep just the hover effects without the "View Details" text */
-    .product-card:hover {
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-    transform: translateY(-2px);
-    border-color: lightgray;
-    background: white;
     }
 
     .product-card-img {
@@ -734,9 +725,15 @@
 
     .product-wishlist-btn::before {
       content: "\2661";
-      font-size: 15px;
+      font-size: 25px;
       color: black;
       line-height: 1;
+    }
+    
+    .product-wishlist-btn.is-active::before {
+      content: "\2665";
+      color: red;
+      font-size: 25px;
     }
 
     .product-wishlist-btn:hover {
@@ -1113,15 +1110,18 @@
 
     <div class="nav-buttons">
       <a href="About Us.html" class="nav-button">About Us</a>
-      <a href="productline.html" class="nav-button active">Products</a>
-      <a href="reviews.html" class="nav-button">Reviews</a>
+      <a href="productline.html" class="nav-button">Products</a>
+      <a href="Reviews.html" class="nav-button">Reviews</a>
       <a href="Contact Us.html" class="nav-button">Contact Us</a>
     </div>
 
     <div class="right-controls" id="rightControls">
       <div class="right-default" id="rightDefault">
         <a href="Login.html" class="login-btn">Log in</a>
-        <a href="create-account.html" class="create-btn">Create Account</a>
+        <a href="create-account.html" class="create-btn">
+          <img src="images/account.png" alt="" class="btn-icon">
+          Create Account
+        </a>
 
         <div id="cart-icon" class="icon-link" aria-label="Open basket">
           <img src="images/basket.png" alt="Basket" class="nav-icon">
@@ -1147,9 +1147,9 @@
   <div class="page">
     <section class="filter-row">
       <div class="filter-breadcrumb">
-        <a href="EveryWear Homepage.html">Home</a>
+        <a href="#">Home</a>
         <span class="separator">/</span>
-        <a href="#" id="viewAllLink">Products</a>
+        <a href="#" id="viewAllLink">View All</a>
         <span class="separator">/</span>
         <span id="crumbCategory" class="filter-breadcrumb-current">All products</span>
       </div>
@@ -1273,28 +1273,28 @@
       <div class="footer-col">
         <h4>Shop</h4>
         <ul>
-          <li><a href="productline.html?category=Tops">Tops</a></li>
-          <li><a href="productline.html?category=Bottoms">Bottoms</a></li>
-          <li><a href="productline.html?category=Outerwear">Outerwear</a></li>
-          <li><a href="productline.html?category=Footwear">Footwear</a></li>
-          <li><a href="productline.html?category=Accessories">Accessories</a></li>
+          <li><a href="#">Tops</a></li>
+          <li><a href="#">Bottoms</a></li>
+          <li><a href="#">Outerwear</a></li>
+          <li><a href="#">Footwear</a></li>
+          <li><a href="#">Accessories</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
         <h4>Customer Service</h4>
         <ul>
-          <li><a href="Contact Us.html">Delivery &amp; Returns</a></li>
-          <li><a href="login.html">10% Student Discount</a></li>
-          <li><a href="Contact Us.html">FAQs</a></li>
-          <li><a href="login.html">My Account</a></li>
+          <li><a href="#">Delivery &amp; Returns</a></li>
+          <li><a href="#">10% Student Discount</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">My Account</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
         <h4>Join Now</h4>
         <ul>
-          <li><a href="create-account.html">Become a member today and get exclusive benefits!</a></li>
+          <li><a href="#">Become a member today and get exclusive benefits!</a></li>
         </ul>
       </div>
 
@@ -1435,7 +1435,18 @@
     const sortCurrent  = document.getElementById("sortCurrent");
     const sortOptions  = sortMenu.querySelectorAll(".sort-option");
 
-    const wishlist     = new Set();
+    const wishlist = new Set(
+      JSON.parse(localStorage.getItem("wishlist")) || []
+    );
+
+    function saveWishlist() {
+      localStorage.setItem("wishlist", JSON.stringify([...wishlist]));
+      if (wishlist.size > 0) {
+        wishlistToggle.classList.add("has-items");
+      } else {
+        wishlistToggle.classList.remove("has-items");
+      }
+    }
 
     const cartIcon           = document.querySelector("#cart-icon");
     const cartPanel          = document.querySelector(".cart");
@@ -1467,17 +1478,6 @@
         card.className = "product-card";
         card.dataset.category = p.category;
         card.dataset.type = p.type;
-
-        // Add click event to navigate to product page
-        card.addEventListener("click", (e) => {
-          // Don't navigate if clicking on buttons inside the card
-          if (e.target.closest(".product-wishlist-btn") || 
-            e.target.closest(".product-card-add-cart")) {
-            return; // Let the button handlers work instead
-          }
-          // For demo: go to productdescrip.html with product ID
-          window.location.href = `productdescrip.html?product=${p.id}`;
-        });
 
         const imgWrap = document.createElement("div");
         imgWrap.className = "product-card-img";
@@ -1537,6 +1537,25 @@
 
         productListEl.appendChild(card);
       });
+
+      function attachWishlistHandlers() {
+        const buttons = document.querySelectorAll(".product-wishlist-btn");
+        buttons.forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const productId = btn.dataset.id;
+            if (wishlist.has(productId)) {
+              wishlist.delete(productId);
+              btn.classList.remove("is-active");
+            } else {
+              wishlist.add(productId);
+              btn.classList.add("is-active");
+            }
+            
+            saveWishlist();
+          });
+        });
+      }
 
       attachWishlistHandlers();
       attachCartHandlers();
@@ -1723,6 +1742,17 @@
     function updateWishlistIcon() {
       wishlistToggle.classList.toggle("has-items", wishlist.size > 0);
     }
+    wishlistToggle.addEventListener("click", () => {
+      if (wishlist.size === 0) {
+        alert("Your wishlist is empty");
+        return;
+      }
+      
+      const wishlistedProducts = products.filter(p => wishlist.has(p.id));
+      crumbCategoryEl.textContent = "Wishlist";
+      renderProductGrid(wishlistedProducts);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
 
     function attachWishlistHandlers() {
       document.querySelectorAll(".product-wishlist-btn").forEach(function (btn) {
@@ -1744,6 +1774,11 @@
     wishlistToggle.addEventListener("click", function () {
       productListEl.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+    
+    document.addEventListener("DOMContentLoaded", () => {
+      saveWishlist();   // update icon state   
+      applyFilters();   // render products with correct wishlist hearts
+      });
 
     window.addEventListener("scroll", function () {
       if (window.scrollY > 350) {
@@ -1880,26 +1915,7 @@
       });
     }
 
-    function applyCategoryFromURL() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const category = urlParams.get("category");
-
-      if (category) {
-        activeCategory = category;
-        activeType = "";
-
-        // Highlight correct sidebar group
-        menuGroups.forEach(btn => {
-          btn.classList.toggle("active", btn.dataset.filterGroup === category);
-        });
-
-        updateBreadcrumb();
-        applyFilters(true);
-      }
-    }
-
     document.addEventListener("DOMContentLoaded", function () {
-      applyCategoryFromURL(); // NEW
       applyFilters();
     });
   </script>
