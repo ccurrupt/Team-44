@@ -583,7 +583,7 @@ input {
             height: 160px;
             border-radius: 50%;
             border: 2px solid #aaa;
-            background-size: 220%;
+            background-size: 400%;
             background-repeat: no-repeat;
             display: none;
             pointer-events: none;
@@ -907,9 +907,9 @@ input {
 
     <div class="nav-buttons">
         <a href="About Us.html" class="nav-button">About Us</a>
-        <a href="Products.html" class="nav-button">Products</a>
-        <a href="Reviews.html" class="nav-button">Reviews</a>
-        <a href="Orders.html" class="nav-button">Orders</a>
+        <a href="productline.html" class="nav-button active">Products</a>
+        <a href="reviews.html" class="nav-button">Reviews</a>
+        <a href="Contact Us.html" class="nav-button">Contact Us</a>
     </div>
 
     <div class="right-controls" id="rightControls">
@@ -1002,28 +1002,28 @@ input {
       <div class="footer-col">
         <h4>Shop</h4>
         <ul>
-          <li><a href="#">Tops</a></li>
-          <li><a href="#">Bottoms</a></li>
-          <li><a href="#">Outerwear</a></li>
-          <li><a href="#">Footwear</a></li>
-          <li><a href="#">Accessories</a></li>
+          <li><a href="productline.html?category=Tops">Tops</a></li>
+          <li><a href="productline.html?category=Bottoms">Bottoms</a></li>
+          <li><a href="productline.html?category=Outerwear">Outerwear</a></li>
+          <li><a href="productline.html?category=Footwear">Footwear</a></li>
+          <li><a href="productline.html?category=Accessories">Accessories</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
         <h4>Customer Service</h4>
         <ul>
-          <li><a href="#">Delivery & Returns</a></li>
-          <li><a href="#">10% Student Discount</a></li>
-          <li><a href="#">FAQs</a></li>
-          <li><a href="#">My Account</a></li>
+          <li><a href="Contact Us.html">Delivery & Returns</a></li>
+          <li><a href="login.html">10% Student Discount</a></li>
+          <li><a href="Contact Us.html">FAQs</a></li>
+          <li><a href="login.html">My Account</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
         <h4>Join Now</h4>
         <ul>
-          <li><a href="#">Become a member today and get exclusive benefits!</a></li>
+          <li><a href="create-account.html">Become a member today and get exclusive benefits!</a></li>
         </ul>
       </div>
 
@@ -1228,6 +1228,39 @@ document.querySelector(".btn-buy").addEventListener("click", () => {
     window.location.href = "checkout.html";
 });
 
+/* Check URL hash to open cart */
+function checkAndOpenCart() {
+    console.log("Checking for #open-cart hash...");
+    console.log("Current hash:", window.location.hash);
+    
+    if (window.location.hash === "#open-cart") {
+        console.log("Opening cart...");
+        
+        // Open the cart sidebar
+        document.getElementById("cart").classList.add("active");
+        renderCart();
+        
+        // Remove the hash from URL without refreshing
+        history.replaceState(null, null, window.location.pathname + window.location.search);
+        
+        // Scroll to top to ensure cart is visible
+        window.scrollTo(0, 0);
+    }
+}
+
+// Check on page load
+window.addEventListener('load', function() {
+    console.log("Page loaded, checking hash...");
+    checkAndOpenCart();
+});
+
+// Also check on hash change
+window.addEventListener('hashchange', checkAndOpenCart);
+
+// Check immediately if page is already loaded
+if (document.readyState === 'complete') {
+    checkAndOpenCart();
+}
 </script>
 
 </body>

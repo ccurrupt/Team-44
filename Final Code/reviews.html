@@ -7,6 +7,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css"
     rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css">
 
     <style>
         body {
@@ -540,141 +541,6 @@ input {
     display: flex;
     gap: 15px;
 }
-
-footer {
-      background: #111827;
-      color: #ffffff;
-      padding: 3rem 1.5rem 2rem;
-      margin-top: 3rem;
-    }
-
-    .footer-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2.5rem;
-    }
-
-    .footer-col h4 {
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-
-    .footer-col p {
-      font-size: 0.9rem;
-      color: #d1d5db;
-    }
-
-    .footer-col ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      line-height: 1.9;
-    }
-
-    .footer-col ul li a {
-      color: #d1d5db;
-      font-size: 0.9rem;
-      text-decoration: none;
-      transition: 0.2s;
-    }
-
-    .footer-col ul li a:hover {
-      color: #ffffff;
-    }
-
-    .footer-socials {
-      display: flex;
-      gap: 0.75rem;
-      margin-top: 0.8rem;
-    }
-
-    .footer-socials i {
-      font-size: 1.35rem;
-      color: #f3f4f6;
-      background: #1f2937;
-      padding: 0.6rem;
-      border-radius: 50%;
-      transition: 0.2s ease;
-      cursor: pointer;
-    }
-
-    .footer-socials i:hover {
-      background: #f3f4f6;
-      color: #111827;
-      transform: translateY(-2px);
-    }
-
-    .footer-col-right {
-      text-align: right;
-    }
-
-    .footer-col-right .footer-socials {
-      justify-content: flex-end;
-    }
-
-    .footer-app {
-      margin-top: 1.4rem;
-    }
-
-    .footer-app h5 {
-      font-size: 0.95rem;
-      margin-bottom: 0.6rem;
-      font-weight: 600;
-    }
-
-    .store-badges {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      align-items: flex-end;
-    }
-
-    .store-badges img {
-      width: 150px;
-      height: auto;
-      display: block;
-      border-radius: 0.35rem;
-    }
-
-    .footer-bottom {
-      text-align: center;
-      margin-top: 2.4rem;
-      padding-top: 1.6rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
-      font-size: 0.85rem;
-      color: #d1d5db;
-    }
-
-    @media (max-width: 760px) {
-      .footer-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 520px) {
-      .footer-container {
-        grid-template-columns: 1fr;
-      }
-      .footer-col {
-        text-align: center;
-      }
-      .footer-socials {
-        justify-content: center;
-      }
-      .footer-col-right {
-        text-align: center;
-      }
-      .footer-col-right .footer-socials {
-        justify-content: center;
-      }
-      .store-badges {
-        align-items: center;
-      }
-    }
-
     </style>
 </head>
 
@@ -693,9 +559,9 @@ footer {
         <!-- NAV BUTTONS -->
         <div class="nav-buttons">
             <a href="About Us.html" class="nav-button">About Us</a>
-            <a href="Products.html" class="nav-button">Products</a>
-            <a href="Reviews.html" class="nav-button active">Reviews</a>
-            <a href="Orders.html" class="nav-button">Orders</a>
+            <a href="productline.html" class="nav-button">Products</a>
+            <a href="reviews.html" class="nav-button active">Reviews</a>
+            <a href="Contact Us.html" class="nav-button">Contact Us</a>
         </div>
 
         <!-- RIGHT SIDE: Login / Create Account / Basket / Search -->
@@ -707,7 +573,7 @@ footer {
                 <a href="Login.html" class="login-btn">Log in</a>
                 <a href="create-account.html" class="create-btn">Create Account</a>
 
-                <a href="Basket.html" class="icon-link">
+                <a href="productdescrip.html#open-cart.html" class="icon-link">
                     <img src="images/basket.png" alt="Basket" class="nav-icon">
                 </a>
 
@@ -756,64 +622,64 @@ footer {
     </div>
 </div>
 
-<footer>
-    <div class="footer-container">
-      <div class="footer-col">
-        <h4>Shop</h4>
-        <ul>
-          <li><a href="#">Tops</a></li>
-          <li><a href="#">Bottoms</a></li>
-          <li><a href="#">Outerwear</a></li>
-          <li><a href="#">Footwear</a></li>
-          <li><a href="#">Accessories</a></li>
-        </ul>
-      </div>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="productline.html?category=Tops">Tops</a></li>
+                    <li><a href="productline.html?category=Bottoms">Bottoms</a></li>
+                    <li><a href="productline.html?category=Outerwear">Outerwear</a></li>
+                    <li><a href="productline.html?category=Footwear">Footwear</a></li>
+                    <li><a href="productline.html?category=Accessories">Accessories</a></li>
+                </ul>
+            </div>
 
-      <div class="footer-col">
-        <h4>Customer Service</h4>
-        <ul>
-          <li><a href="#">Delivery & Returns</a></li>
-          <li><a href="#">10% Student Discount</a></li>
-          <li><a href="#">FAQs</a></li>
-          <li><a href="#">My Account</a></li>
-        </ul>
-      </div>
+            <div class="footer-col">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="productline.html">Delivery & Returns</a></li>
+                    <li><a href="login.html">10% Student Discount</a></li>
+                    <li><a href="Contact Us.html">FAQs</a></li>
+                    <li><a href="login.html">My Account</a></li>
+                </ul>
+            </div>
 
-      <div class="footer-col">
-        <h4>Join Now</h4>
-        <ul>
-          <li><a href="#">Become a member today and get exclusive benefits!</a></li>
-        </ul>
-      </div>
+            <div class="footer-col">
+                <h4>Join Now</h4>
+                <ul>
+                <li><a href="create-account.html">Become a member today and get exclusive benefits!</a></li>
+                </ul>
+            </div>
 
-      <div class="footer-col footer-col-right">
-        <h4>EveryWear</h4>
-        <p>Designed for all.</p>
-        <p>Follow Us On:</p>
-        <div class="footer-socials">
-          <i class="ri-instagram-line"></i>
-          <i class="ri-tiktok-line"></i>
-          <i class="ri-youtube-line"></i>
+            <div class="footer-col footer-col-right">
+                <h4>EveryWear</h4>
+                <p>Designed for all.</p>
+                <p>Follow Us On:</p>
+                <div class="footer-socials">
+                    <i class="ri-instagram-line"></i>
+                    <i class="ri-tiktok-line"></i>
+                    <i class="ri-youtube-line"></i>
+                </div>
+
+                <div class="footer-app">
+                    <h5>Download Our App</h5>
+                    <div class="store-badges">
+                        <a href="#">
+                        <img src="images/image1.png" alt="Get it on Google Play">
+                        </a>
+                        <a href="#">
+                        <img src="images/image2.png" alt="Download on the App Store">
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="footer-app">
-          <h5>Download Our App</h5>
-          <div class="store-badges">
-            <a href="#" aria-label="Get it on Google Play">
-              <img src="images/image1.png" alt="Get it on Google Play">
-            </a>
-            <a href="#" aria-label="Download on the App Store">
-              <img src="images/image2.png" alt="Download on the App Store">
-            </a>
-          </div>
+        <div class="footer-bottom">
+            © 2025 EveryWear. All rights reserved.
         </div>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      © 2025 EveryWear. All rights reserved.
-    </div>
-  </footer>
+    </footer>
 
     <script>
     const searchToggle = document.getElementById("searchToggle");
