@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us – EveryWear</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .contact-wrapper {
+            max-width: 480px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .contact-wrapper h1 {
+            text-align: center;
+            color: #7ac6d9;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .contact-wrapper label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .contact-wrapper input,
+        .contact-wrapper textarea {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #d9d9d9;
+            margin-bottom: 20px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .contact-wrapper textarea {
+            height: 140px;
+            resize: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: black;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <div class="logo-section">
+            <a href="EveryWear Homepage.html" class="logo-link" aria-label="Go to homepage">
+                <img src="images/logo.png" loading="eager" alt="EveryWear Logo" width="120" height="90" class="site-logo">
+            </a>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="About Us.html" class="nav-button">About Us</a>
+            <a href="productline.html" class="nav-button">Products</a>
+            <a href="reviews.html" class="nav-button">Reviews</a>
+            <a href="Contact Us.html" class="nav-button active">Contact Us</a>
+        </div>
+
+        <div class="right-controls">
+            <a href="Login.html" class="login-btn">Log in</a>
+            <a href="create-account.html" class="create-btn">
+                <img src="images/account.png" alt="" class="btn-icon">
+                Create Account
+            </a>
+
+            <a href="productdescrip.html#open-cart.html" class="icon-link">
+                <img src="images/basket.png" alt="Basket" class="nav-icon">
+            </a>
+
+            <div class="icon-link">
+                <img src="images/search.png" alt="Search" class="nav-icon">
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-wrapper">
+
+        <h1>EVERYWEAR</h1>
+
+        <form>
+
+            <label>Your Name</label>
+            <input type="text" placeholder="Enter your full name" required>
+
+            <label>Email Address</label>
+            <input type="email" placeholder="Enter your email address" required>
+
+            <label>Subject</label>
+            <input type="text" placeholder="Enter the subject" required>
+
+            <label>Message</label>
+            <textarea placeholder="Type your message here..." required></textarea>
+
+            <button type="submit" class="submit-btn">Send Message</button>
+
+        </form>
+
+        <!-- Message sent notification -->
+        <p id="msgSent" style="display:none; color: green; font-weight: bold; text-align:center; margin-top:10px;">
+            Message sent!
+        </p>
+
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="productline.html?category=Tops">Tops</a></li>
+                    <li><a href="productline.html?category=Bottoms">Bottoms</a></li>
+                    <li><a href="productline.html?category=Outerwear">Outerwear</a></li>
+                    <li><a href="productline.html?category=Footwear">Footwear</a></li>
+                    <li><a href="productline.html?category=Accessories">Accessories</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="productline.html">Delivery & Returns</a></li>
+                    <li><a href="login.html">10% Student Discount</a></li>
+                    <li><a href="Contact Us.html">FAQs</a></li>
+                    <li><a href="login.html">My Account</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Join Now</h4>
+                <ul>
+                <li><a href="create-account.html">Become a member today and get exclusive benefits!</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col footer-col-right">
+                <h4>EveryWear</h4>
+                <p>Designed for all.</p>
+                <p>Follow Us On:</p>
+                <div class="footer-socials">
+                    <i class="ri-instagram-line"></i>
+                    <i class="ri-tiktok-line"></i>
+                    <i class="ri-youtube-line"></i>
+                </div>
+
+                <div class="footer-app">
+                    <h5>Download Our App</h5>
+                    <div class="store-badges">
+                        <a href="#">
+                        <img src="images/image1.png" alt="Get it on Google Play">
+                        </a>
+                        <a href="#">
+                        <img src="images/image2.png" alt="Download on the App Store">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 EveryWear. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        const form = document.querySelector("form");
+        const msg = document.getElementById("msgSent");
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // stop page reload
+            msg.style.display = "block"; // show message
+
+            // hide after 3 seconds
+            setTimeout(() => {
+                msg.style.display = "none";
+            }, 3000);
+        });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const cartIcon = document.querySelector("#cart-icon");
+        const cartPanel = document.querySelector(".cart");
+        const cartCloseBtn = document.querySelector("#cart-close");
+  
+        if (cartIcon && cartPanel) {
+            cartIcon.addEventListener("click", () => {
+                cartPanel.classList.add("active");
+            });
+        }
+  
+        if (cartCloseBtn && cartPanel) {
+            cartCloseBtn.addEventListener("click", () => {
+                cartPanel.classList.remove("active");
+            });
+        }
+    });
+    
+    const searchToggle = document.getElementById("searchToggle");
+    const searchClose = document.getElementById("searchClose");
+    const searchBar = document.getElementById("searchBar");
+    const rightDefault = document.getElementById("rightDefault");
+
+    function openSearch() {
+        rightDefault.classList.add("hidden");
+        searchBar.classList.add("active");
+    }
+
+    function closeSearch() {
+        searchBar.classList.remove("active");
+        rightDefault.classList.remove("hidden");
+    }
+
+    searchToggle.addEventListener("click", () => {
+        if (searchBar.classList.contains("active")) {
+            closeSearch();
+        } else {
+            openSearch();
+        }
+    });
+
+    searchClose.addEventListener("click", closeSearch);
+    </script>
+</body>
+</html>
