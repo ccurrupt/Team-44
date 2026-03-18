@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EveryWear</title>
-
-    <!-- Inline styles removed; all styles are now centrally defined in style.css -->
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -29,18 +27,16 @@
             <a href="Contact Us.html" class="nav-button">Contact Us</a>
         </div>
 
-        <!-- RIGHT SIDE: Login / Create Account / Basket / Search -->
+        <!-- RIGHT SIDE -->
         <div class="right-controls" id="rightControls">
 
-
-            <!-- Default icons (visible normally) -->
             <div class="right-default" id="rightDefault">
                 <a href="Login.html" class="login-btn">Log in</a>
+
                 <a href="create-account.html" class="create-btn">
                     <img src="images/account.png" alt="" class="btn-icon">
                     Create Account
                 </a>
-
 
                 <a href="productdescrip.html#open-cart" class="icon-link">
                     <img src="images/basket.png" alt="Basket" class="nav-icon">
@@ -49,19 +45,22 @@
                 <div class="icon-link search-icon" id="searchToggle">
                     <img src="images/search.png" alt="Search" class="nav-icon">
                 </div>
+
+                <!-- ✅ DARK MODE TOGGLE -->
+                <button id="themeToggle" class="icon-link" aria-label="Toggle theme">
+                    🌙
+                </button>
             </div>
 
-            <!-- Search bar overlay (hidden until search opens) -->
             <div id="searchBar" class="search-bar-overlay">
                 <input type="text" placeholder="Search...">
             </div>
 
-            <!-- Close icon (only visible when search is open) -->
             <div class="icon-link search-close" id="searchClose">
                 <img src="images/search.png" alt="Close Search" class="nav-icon">
             </div>
         </div>
-    </div> <!-- End of NAVBAR -->
+    </div>
 
     <!-- SCROLLING BANNER -->
     <a href="productline.html" class="banner-link">
@@ -83,6 +82,7 @@
             <h1>Welcome to EveryWear.</h1>
             <p class="search-heading">What are you looking for?</p>
         </div>
+
         <div class="hero-buttons">
             <a href="productline.html?category=Outerwear" class="category-btn">Outerwear</a>
             <a href="productline.html?category=Tops" class="category-btn">Tops</a>
@@ -90,9 +90,11 @@
             <a href="productline.html?category=Footwear" class="category-btn">Footwear</a>
             <a href="productline.html?category=Accessories" class="category-btn">Accessories</a>
         </div>
+
         <div>
             <h2>Why YOU should shop with us:</h2>
         </div>
+
         <section class="brand-values">
             <div class="value">
                 <h3>✨ Premium Quality</h3>
@@ -109,7 +111,7 @@
         </section>
     </div>
 
-
+    <!-- FOOTER -->
     <footer>
         <div class="footer-container">
             <div class="footer-col">
@@ -136,7 +138,7 @@
             <div class="footer-col">
                 <h4>Join Now</h4>
                 <ul>
-                <li><a href="create-account.html">Become a member today and get exclusive benefits!</a></li>
+                    <li><a href="create-account.html">Become a member today and get exclusive benefits!</a></li>
                 </ul>
             </div>
 
@@ -153,12 +155,8 @@
                 <div class="footer-app">
                     <h5>Download Our App</h5>
                     <div class="store-badges">
-                        <a href="#">
-                        <img src="images/image1.png" alt="Get it on Google Play">
-                        </a>
-                        <a href="#">
-                        <img src="images/image2.png" alt="Download on the App Store">
-                        </a>
+                        <a href="#"><img src="images/image1.png" alt="Google Play"></a>
+                        <a href="#"><img src="images/image2.png" alt="App Store"></a>
                     </div>
                 </div>
             </div>
@@ -169,6 +167,7 @@
         </div>
     </footer>
 
+    <!-- SCRIPTS -->
     <script>
     const searchToggle = document.getElementById("searchToggle");
     const searchClose = document.getElementById("searchClose");
@@ -194,6 +193,27 @@
     });
 
     searchClose.addEventListener("click", closeSearch);
+
+    /* DARK MODE */
+    const themeToggle = document.getElementById("themeToggle");
+
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark");
+        themeToggle.textContent = "☀️";
+    }
+
+    themeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+
+        if (document.body.classList.contains("dark")) {
+            localStorage.setItem("theme", "dark");
+            themeToggle.textContent = "☀️";
+        } else {
+            localStorage.setItem("theme", "light");
+            themeToggle.textContent = "🌙";
+        }
+    });
     </script>
+
 </body>
 </html>
