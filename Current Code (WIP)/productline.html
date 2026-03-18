@@ -1330,6 +1330,7 @@
   <button id="backToTop" aria-label="Back to top">↑</button>
 
   <script>
+    
     const products = [
       { id: "jeans1", category: "Bottoms", type: "Jeans",
         name: "Two-Toned Unisex Panel Jeans",
@@ -1905,19 +1906,32 @@
     }
 
     const buyBtn = document.querySelector(".btn-buy");
-    if (buyBtn) {
-      buyBtn.addEventListener("click", () => {
-        if (cartItemCount === 0) {
-          alert("Your cart is empty.");
-          return;
-        }
-        alert("Checkout flow would start here.");
-      });
+if (buyBtn) {
+  buyBtn.addEventListener("click", () => {
+    if (cartItemCount === 0) {
+      alert("Your cart is empty.");
+      return;
     }
 
+    let cart = [];
+
+    document.querySelectorAll(".cart-box").forEach(box => {
+      const name = box.querySelector(".cart-product-title").textContent;
+      const price = parseFloat(box.querySelector(".cart-price").textContent.replace(/[^\d.]/g, ""));
+      const qty = parseInt(box.querySelector(".number").textContent);
+      const image = box.querySelector("img").src;
+
+      cart.push({ name, price, qty, image });
+    });
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    window.location.href = "checkout.html";
+  });
+}
     document.addEventListener("DOMContentLoaded", function () {
       applyFilters();
     });
+    
   </script>
 </body>
 </html>
