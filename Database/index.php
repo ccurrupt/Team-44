@@ -11,6 +11,16 @@ if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 $cartCount = count($_SESSION['cart']);
+// Fetch 4 featured products from the database for their images
+$featuredProducts = [];
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=cs2team44_db;charset=utf8mb4", 'cs2team44', 'wpRwMNcuA4uajOG92dzRRqbhb');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $stmt = $pdo->query("SELECT product_id, name, price, image_main, description FROM Products ORDER BY rating DESC LIMIT 4");
+    $featuredProducts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch(PDOException $e) {
+    // If DB fails, leave empty — we'll use static fallback
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +28,9 @@ $cartCount = count($_SESSION['cart']);
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EveryWear - Home</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="style.css">
+
 <link
     href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css"
     rel="stylesheet"
@@ -37,51 +50,24 @@ body {
     line-height: 1.6;
 }
 
-/* NAVBAR STYLES - Matching about.php */
-.navbar {
-    background: white;
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.logo-section img {
-    height: 50px;
-}
-
-.nav-buttons {
-    display: flex;
-    gap: 20px;
-}
-
-.nav-button {
-    text-decoration: none;
-    color: #333;
-    padding: 8px 15px;
-    border-radius: 5px;
-    transition: 0.3s;
-    font-weight: 500;
-}
-
-.nav-button:hover {
-    background: #e0e0e0;
-}
-
-.nav-button.active {
-    background: #0066cc;
+/* Override style.css hero for homepage */
+.hero {
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    min-height: auto !important;
+    box-shadow: none !important;
+    animation: none !important;
+    font-size: inherit !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 100px 20px !important;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
+    margin-bottom: 40px !important;
 }
 
-.right-controls {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
 
 /* USER AUTH BUTTONS */
 .login-btn, .create-btn {
@@ -400,43 +386,39 @@ footer {
 </head>
 <body>
 
-<!-- NAVBAR - Same as about.php -->
+<!-- NAVBAR -->
 <div class="navbar">
-    <!-- LOGO -->
     <div class="logo-section">
-        <a href="index.php">
-            <img src="logo.png" alt="EveryWear">
+        <a href="index.php" class="logo-link">
+            <img src="logo.png" alt="EveryWear Logo" class="site-logo">
         </a>
     </div>
-    
-    <!-- NAVIGATION BUTTONS -->
+
     <div class="nav-buttons">
-        <a href="index.php" class="nav-button active">Home</a>
-        <a href="about.php" class="nav-button">About</a>
+        <a href="index.php"    class="nav-button active">Home</a>
+        <a href="about.php"    class="nav-button">About Us</a>
         <a href="products.php" class="nav-button">Products</a>
-        <a href="reviews.php" class="nav-button">Reviews</a>
-        <a href="orders.php" class="nav-button">Orders</a>
+        <a href="reviews.php"  class="nav-button">Reviews</a>
+        <a href="orders.php"   class="nav-button">Orders</a>
     </div>
-    
-    <!-- RIGHT CONTROLS -->
+
     <div class="right-controls">
-        <?php if($isLoggedIn): ?>
-            <!-- User is logged in -->
-            <span class="welcome-msg">Welcome, <?php echo htmlspecialchars($userName); ?>!</span>
-            <a href="logout.php" class="logout-btn">Logout</a>
-        <?php else: ?>
-            <!-- User is NOT logged in -->
-            <a href="login.php" class="login-btn">Login</a>
-            <a href="register.php" class="create-btn">Sign Up</a>
-        <?php endif; ?>
-        
-        <!-- Cart icon with count -->
-        <a href="cart.php" class="icon-link">
-             <img src="basket.png" alt="Cart" class="nav-icon">
-        	<?php if($cartCount > 0): ?>
-            	<span class="cart-count-badge"><?php echo $cartCount; ?></span>
+        <div class="right-default">
+            <?php if($isLoggedIn): ?>
+                <span class="welcome-msg">Welcome, <?php echo htmlspecialchars($userName); ?>!</span>
+                <a href="logout.php" class="logout-btn">Logout</a>
+            <?php else: ?>
+                <a href="login.php" class="login-btn">Log in</a>
+                <a href="create-account.php" class="create-btn">Create Account</a>
             <?php endif; ?>
-        </a>
+
+            <a href="cart.php" class="icon-link">
+                <img src="basket.png" alt="Cart" class="nav-icon">
+                <?php if($cartCount > 0): ?>
+                    <span class="cart-count-badge"><?php echo $cartCount; ?></span>
+                <?php endif; ?>
+            </a>
+        </div>
     </div>
 </div>
 
@@ -461,49 +443,57 @@ footer {
 <div class="featured-products">
     <h2>Featured Products</h2>
     <div class="products-grid">
-        <!-- Product 1 -->
-        <div class="product-card">
-            <img src="images/tshirts1.png" alt="T-Shirt">
-            <div class="product-info">
-                <h3>Basic Cotton T-Shirt</h3>
-                <p>Comfortable everyday essential</p>
-                <div class="price">£14.99</div>
-                <button onclick="window.location.href='product-detail.php?id=1'">View Details</button>
+        <?php if (!empty($featuredProducts)): ?>
+            <?php foreach ($featuredProducts as $fp): ?>
+                <div class="product-card">
+                    <img src="<?php echo htmlspecialchars($fp['image_main']); ?>" alt="<?php echo htmlspecialchars($fp['name']); ?>">
+                    <div class="product-info">
+                        <h3><?php echo htmlspecialchars($fp['name']); ?></h3>
+                        <p><?php echo htmlspecialchars(substr($fp['description'] ?? '', 0, 40)); ?></p>
+                        <div class="price">£<?php echo number_format($fp['price'], 2); ?></div>
+                        <button onclick="window.location.href='product-detail.php?id=<?php echo $fp['product_id']; ?>'">View Details</button>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <!-- Static fallback if DB is unavailable -->
+            <div class="product-card">
+                <img src="images/tshirts1.png" alt="T-Shirt">
+                <div class="product-info">
+                    <h3>Basic Cotton T-Shirt</h3>
+                    <p>Comfortable everyday essential</p>
+                    <div class="price">£14.99</div>
+                    <button onclick="window.location.href='product-detail.php?id=1'">View Details</button>
+                </div>
             </div>
-        </div>
-        
-        <!-- Product 2 -->
-        <div class="product-card">
-            <img src="images/tshirts2.png" alt="Premium T-Shirt">
-            <div class="product-info">
-                <h3>Premium Fit T-Shirt</h3>
-                <p>Slim fit with premium fabric</p>
-                <div class="price">£24.99</div>
-                <button onclick="window.location.href='product-detail.php?id=2'">View Details</button>
+            <div class="product-card">
+                <img src="images/tshirts2.png" alt="Premium T-Shirt">
+                <div class="product-info">
+                    <h3>Premium Fit T-Shirt</h3>
+                    <p>Slim fit with premium fabric</p>
+                    <div class="price">£24.99</div>
+                    <button onclick="window.location.href='product-detail.php?id=2'">View Details</button>
+                </div>
             </div>
-        </div>
-        
-        <!-- Product 3 -->
-        <div class="product-card">
-            <img src="images/tshirts3.png" alt="Hoodie">
-            <div class="product-info">
-                <h3>Comfort Hoodie</h3>
-                <p>Warm and cozy for cooler days</p>
-                <div class="price">£39.99</div>
-                <button onclick="window.location.href='product-detail.php?id=3'">View Details</button>
+            <div class="product-card">
+                <img src="images/tshirts3.png" alt="Hoodie">
+                <div class="product-info">
+                    <h3>Comfort Hoodie</h3>
+                    <p>Warm and cozy for cooler days</p>
+                    <div class="price">£39.99</div>
+                    <button onclick="window.location.href='product-detail.php?id=3'">View Details</button>
+                </div>
             </div>
-        </div>
-        
-        <!-- Product 4 -->
-        <div class="product-card">
-            <img src="images/tshirts4.png" alt="Sweatshirt">
-            <div class="product-info">
-                <h3>Casual Sweatshirt</h3>
-                <p>Perfect for casual outings</p>
-                <div class="price">£29.99</div>
-                <button onclick="window.location.href='product-detail.php?id=4'">View Details</button>
+            <div class="product-card">
+                <img src="images/tshirts4.png" alt="Sweatshirt">
+                <div class="product-info">
+                    <h3>Casual Sweatshirt</h3>
+                    <p>Perfect for casual outings</p>
+                    <div class="price">£29.99</div>
+                    <button onclick="window.location.href='product-detail.php?id=4'">View Details</button>
+                </div>
             </div>
-        </div>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -577,11 +567,11 @@ footer {
 </footer>
 
 <script>
-// Search function
+// Search function - FIXED: now goes to products.php instead of non-existent search.php
 function performSearch() {
     const searchTerm = document.getElementById('searchInput').value.trim();
     if (searchTerm) {
-        window.location.href = `search.php?q=${encodeURIComponent(searchTerm)}`;
+        window.location.href = `products.php?search=${encodeURIComponent(searchTerm)}`;
     }
 }
 
