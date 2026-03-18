@@ -1,11 +1,8 @@
 <?php
-// public_html/orders.php
-// Orders page: shows all orders for the logged-in user
-// and uses the same style of header + cart as the product page.
 
 require_once 'dbconfig.php';   // gives us $pdo and starts the session
 
-// Simple flags for login state (used by header)
+// flags for login state (used by header)
 $isLoggedIn = isset($_SESSION['user_id']);
 $userId     = $isLoggedIn ? (int) $_SESSION['user_id'] : 0;
 $userName   = $isLoggedIn ? ($_SESSION['first_name'] ?? 'User') : '';
@@ -24,13 +21,13 @@ if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
 // ---- Fetch this user's orders from the database ----
 try {
     $stmt = $pdo->prepare("
-        SELECT order_id, created_at
-        FROM Orders
-        WHERE user_id = :uid
-        ORDER BY created_at DESC
-    ");
-    $stmt->execute([':uid' => $userId]);
-    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    SELECT order_id, order_date, status, total_price
+    FROM Orders
+    WHERE user_id = :uid
+    ORDER BY order_date DESC
+");
+$stmt->execute([':uid' => $userId]);
+$orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log('Orders error: ' . $e->getMessage());
     $orders = [];
@@ -135,7 +132,9 @@ foreach ($_SESSION['cart'] as $item) {
             margin-right: 8px;
         }
 
-        /* --- Cart sidebar styling (simplified version of product page) --- */
+		
+
+        /* --- Cart sidebar styling  --- */
 
         .cart-sidebar {
             position: fixed;
@@ -225,36 +224,43 @@ foreach ($_SESSION['cart'] as $item) {
 </head>
 <body>
 
-<!-- NAVBAR – based on the product-detail page so everything feels consistent -->
+<!-- NAVBAR  -->
 <div class="navbar">
     <div class="logo-section">
         <a href="index.php" class="logo-link">
-            <img src="logo.png" alt="EveryWear" class="site-logo">
+            <img src="logo.png" alt="EveryWear Logo" class="site-logo">
         </a>
-        
     </div>
 
     <div class="nav-buttons">
-        <a href="about.php"    class="nav-button">About</a>
+        <a href="index.php"    class="nav-button">Home</a>
+        <a href="about.php"    class="nav-button">About Us</a>
         <a href="products.php" class="nav-button">Products</a>
         <a href="reviews.php"  class="nav-button">Reviews</a>
         <a href="orders.php"   class="nav-button active">Orders</a>
     </div>
 
     <div class="right-controls">
-        <!-- We know user is logged in on this page, but keep it friendly -->
-        <span class="welcome-msg">Hi <?php echo htmlspecialchars($userName); ?>!</span>
-        <a href="logout.php" class="login-btn">Logout</a>
+        <div class="right-default">
+            <?php if($isLoggedIn): ?>
+                <span class="welcome-msg">Welcome, <?php echo htmlspecialchars($userName); ?>!</span>
+                <a href="logout.php" class="logout-btn">Logout</a>
+            <?php else: ?>
+                <a href="login.php" class="login-btn">Log in</a>
+                <a href="create-account.php" class="create-btn">Create Account</a>
+            <?php endif; ?>
 
-        <!-- Cart toggle with number of items -->
-        <a href="#" id="cartToggle" class="icon-link">
-            <i class="ri-shopping-cart-line" style="font-size: 22px;"></i>
-            <span class="cart-count-badge"><?php echo count($_SESSION['cart']); ?></span>
-        </a>
+            <a href="cart.php" class="icon-link">
+                <img src="basket.png" alt="Cart" class="nav-icon">
+                <?php if($cartCount > 0): ?>
+                    <span class="cart-count-badge"><?php echo $cartCount; ?></span>
+                <?php endif; ?>
+            </a>
+        </div>
     </div>
 </div>
 
-<!-- CART SIDEBAR (read-only summary) -->
+<!-- CART SIDEBAR -->
 <div class="cart-sidebar" id="cartSidebar">
     <h2>Your Cart</h2>
 
@@ -316,13 +322,12 @@ foreach ($_SESSION['cart'] as $item) {
                     <div class="order-main">
                         <h2>Order #<?php echo (int) $order['order_id']; ?></h2>
                         <div class="order-meta">
-                            Placed on:
-                            <?php echo htmlspecialchars($order['created_at']); ?>
+                            Placed on: <?php echo htmlspecialchars($order['order_date']); ?>
                         </div>
                     </div>
                     <!-- You can expand this later with real status, total, etc. -->
                     <div class="order-status">
-                        In progress
+                        <?php echo htmlspecialchars($order['status']); ?>
                     </div>
                 </article>
             <?php endforeach; ?>
@@ -331,7 +336,7 @@ foreach ($_SESSION['cart'] as $item) {
 </main>
 
 <script>
-// Very small bit of JS just to open/close the cart sidebar
+//JS to open/close the cart sidebar
 
 const cartToggle = document.getElementById('cartToggle');
 const cartSidebar = document.getElementById('cartSidebar');
