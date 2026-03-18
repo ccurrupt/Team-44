@@ -63,6 +63,51 @@
 
 <body>
 
+    <button id="darkModeToggle" aria-label="Toggle dark mode" style="
+  background: var(--btn-bg);
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  transition: background 0.25s ease, color 0.25s ease;
+">
+  🌞
+</button>
+
+<script>
+  function toggleDarkMode() {
+    const htmlEl = document.documentElement;
+    htmlEl.classList.toggle('dark');
+
+    if (htmlEl.classList.contains('dark')) {
+      localStorage.setItem('theme', 'dark');
+      document.getElementById('darkModeToggle').textContent = '🌙'; // moon icon
+    } else {
+      localStorage.setItem('theme', 'light');
+      document.getElementById('darkModeToggle').textContent = '🌞'; // sun icon
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    const toggleBtn = document.getElementById('darkModeToggle');
+
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+      toggleBtn.textContent = '🌙';
+    } else {
+      toggleBtn.textContent = '🌞';
+    }
+
+    toggleBtn.addEventListener('click', toggleDarkMode);
+  });
+</script>
+
     <div class="navbar">
 
         <div class="logo-section">
