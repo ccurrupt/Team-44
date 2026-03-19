@@ -7,6 +7,12 @@ session_start();
 $isLoggedIn = isset($_SESSION['user_id']);
 $userName = $isLoggedIn ? ($_SESSION['first_name'] ?? 'User') : '';
 
+// Initialize cart for cart count
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+$cartCount = count($_SESSION['cart']);
+
 // Database connection
 $host = 'localhost';
 $dbname = 'cs2team44_db';
@@ -25,7 +31,7 @@ $category = isset($_GET['category']) ? trim($_GET['category']) : '';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $sort = isset($_GET['sort']) ? trim($_GET['sort']) : 'recommended';
 
-// Build SQL query - REMOVED references to 'type' column
+// Build SQL query
 $sql = "SELECT * FROM Products WHERE 1=1";
 $params = [];
 
@@ -68,7 +74,7 @@ try {
     die("Error loading products: " . $e->getMessage());
 }
 
-// Get distinct categories for filter menu - FIXED: Only get categories
+// Get distinct categories for filter menu
 try {
     $categoryStmt = $pdo->query("SELECT DISTINCT category FROM Products WHERE category IS NOT NULL AND category != '' ORDER BY category");
     $categories = $categoryStmt->fetchAll(PDO::FETCH_COLUMN);
@@ -77,9 +83,31 @@ try {
     error_log("Error fetching categories: " . $e->getMessage());
 }
 
-// Remove the $typeStmt query completely - there's no 'type' column
+// Parse categories into a grouped hierarchy for the browse menu
+// Categories are stored as "Unisex · Tops · T-shirt" format
+$groupedCategories = [];
+foreach ($categories as $cat) {
+    $parts = array_map('trim', explode('·', $cat));
+    if (count($parts) >= 3) {
+        $group = $parts[1];
+        $item = $parts[2];
+    } elseif (count($parts) == 2) {
+        $group = $parts[1];
+        $item = null;
+    } else {
+        $group = $parts[0];
+        $item = null;
+    }
+    if (!isset($groupedCategories[$group])) {
+        $groupedCategories[$group] = [];
+    }
+    $groupedCategories[$group][] = [
+        'full' => $cat,
+        'item' => $item
+    ];
+}
+ksort($groupedCategories);
 
-// Also update the breadcrumb logic to not reference 'type'
 $breadcrumb = "All products";
 if (!empty($category)) {
     $breadcrumb = htmlspecialchars($category);
@@ -91,124 +119,20 @@ if (!empty($category)) {
   <meta charset="UTF-8" />
   <title>EveryWear - Products</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="icon" type="image/png" href="logo.png">
+	<link rel="stylesheet" href="style.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet"/>
   <style>
-     * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    
+   
+  
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: white;
-      color: black;
-      line-height: 1.5;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
+    /* ======= PAGE CONTENT ======= */
     .page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1.5rem 1.25rem 2.5rem;
-      background: white;
-      min-height: 100vh;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 0.9rem;
-      border-bottom: 1px solid #e5e7eb;
-      margin-bottom: 1.25rem;
-      gap: 0.75rem;
-    }
-
-    .logo img {
-      height: 42px;
-      width: auto;
-      display: block;
-      object-fit: contain;
-    }
-
-    .header-nav {
-      display: flex;
-      gap: 1.25rem;
-      font-size: 0.85rem;
-      color: #6b7280;
-    }
-
-    .header-nav a {
-      position: relative;
-      padding-bottom: 0.1rem;
-      color: #6b7280;
-      text-decoration: none;
-    }
-
-    .header-nav a:hover::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 1px;
-      background: black;
-    }
-
-    .header-nav a.active {
-      color: black;
-      font-weight: 500;
-    }
-
-    .user-controls {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .user-controls .welcome-msg {
-      padding: 6px 12px;
-      background: #4a78ff;
-      color: white;
-      border-radius: 4px;
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    .user-controls .logout-btn {
-      padding: 6px 12px;
-      background: #e35f26;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 14px;
-      display: inline-block;
-    }
-
-    .user-controls .login-btn,
-    .user-controls .create-btn {
-      padding: 6px 12px;
-      border-radius: 4px;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    .user-controls .login-btn {
-      background: #4a78ff;
-      color: white;
-    }
-
-    .user-controls .create-btn {
-      background: black;
-      color: white;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.5rem 1.25rem 2.5rem;
+		flex 1 0 auto;
     }
 
     .filter-row {
@@ -223,7 +147,7 @@ if (!empty($category)) {
       justify-content: space-between;
       gap: 1.25rem;
       flex-wrap: wrap;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
 
     .filter-breadcrumb {
@@ -235,23 +159,10 @@ if (!empty($category)) {
       white-space: nowrap;
     }
 
-    .filter-breadcrumb a {
-      color: #6b7280;
-      text-decoration: none;
-    }
-
-    .filter-breadcrumb a:hover {
-      color: black;
-    }
-
-    .filter-breadcrumb span.separator {
-      color: #d1d5db;
-    }
-
-    .filter-breadcrumb-current {
-      color: #374151;
-      font-weight: 500;
-    }
+    .filter-breadcrumb a { color: #6b7280; }
+    .filter-breadcrumb a:hover { color: black; }
+    .filter-breadcrumb span.separator { color: #d1d5db; }
+    .filter-breadcrumb-current { color: #374151; font-weight: 500; }
 
     .filter-controls {
       display: flex;
@@ -274,27 +185,6 @@ if (!empty($category)) {
       border: 1px solid #d1d5db;
     }
 
-    .filter-search-icon {
-      width: 14px;
-      height: 14px;
-      border-radius: 999px;
-      border: 2px solid #6b7280;
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .filter-search-icon::after {
-      content: "";
-      position: absolute;
-      width: 7px;
-      height: 2px;
-      background: #6b7280;
-      border-radius: 999px;
-      right: -4px;
-      bottom: -1px;
-      transform: rotate(35deg);
-    }
-
     .filter-search input {
       border: none;
       outline: none;
@@ -304,9 +194,7 @@ if (!empty($category)) {
       color: black;
     }
 
-    .filter-search input::placeholder {
-      color: #6b7280;
-    }
+    .filter-search input::placeholder { color: #6b7280; }
 
     .icon-btn {
       width: 40px;
@@ -317,30 +205,8 @@ if (!empty($category)) {
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
-      transition: background 0.15s ease, box-shadow 0.15s ease,
-                  transform 0.12s ease, color 0.15s ease;
-    }
-
-    .wishlist-btn {
-      background: #f9fafb;
-      color: black;
-    }
-
-    .wishlist-btn::before {
-      content: "\2661";
-      font-size: 17px;
-      line-height: 1;
-    }
-
-    .wishlist-btn:hover {
-      background: #e5e7eb;
-      transform: translateY(-1px);
-    }
-
-    .wishlist-btn.has-items {
-      background: #e5e7eb;
-      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.28);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: background 0.15s ease, transform 0.12s ease;
     }
 
     .hamburger-btn {
@@ -349,8 +215,7 @@ if (!empty($category)) {
     }
 
     .hamburger-btn:hover {
-      background: #111827;
-      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.35);
+      background: #333;
       transform: translateY(-1px);
     }
 
@@ -375,42 +240,12 @@ if (!empty($category)) {
       transition: transform 0.18s ease, top 0.18s ease, bottom 0.18s ease;
     }
 
-    .hamburger-btn span::before {
-      top: -5px;
-    }
+    .hamburger-btn span::before { top: -5px; }
+    .hamburger-btn span::after { bottom: -5px; }
 
-    .hamburger-btn span::after {
-      bottom: -5px;
-    }
-
-    .hamburger-btn.is-open span {
-      background: transparent;
-    }
-
-    .hamburger-btn.is-open span::before {
-      top: 0;
-      transform: rotate(45deg);
-    }
-
-    .hamburger-btn.is-open span::after {
-      bottom: 0;
-      transform: rotate(-45deg);
-    }
-
-    @media (max-width: 720px) {
-      .filter-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .filter-controls {
-        justify-content: space-between;
-      }
-
-      .filter-search {
-        flex: 1;
-      }
-    }
+    .hamburger-btn.is-open span { background: transparent; }
+    .hamburger-btn.is-open span::before { top: 0; transform: rotate(45deg); }
+    .hamburger-btn.is-open span::after { bottom: 0; transform: rotate(-45deg); }
 
     .filter-menu {
       position: absolute;
@@ -442,28 +277,13 @@ if (!empty($category)) {
       margin-bottom: 0.6rem;
     }
 
-    .filter-menu-title {
-      font-size: 0.86rem;
-      font-weight: 600;
-      color: black;
-    }
+    .filter-menu-title { font-size: 0.86rem; font-weight: 600; color: black; }
 
     .filter-menu-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 0.6rem 1.25rem;
       font-size: 0.8rem;
-    }
-
-    @media (max-width: 640px) {
-      .filter-menu {
-        left: 0.9rem;
-        right: 0.9rem;
-        width: auto;
-      }
-      .filter-menu-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
     }
 
     .filter-menu-group-title {
@@ -476,12 +296,11 @@ if (!empty($category)) {
       font-size: 0.8rem;
       text-align: left;
       color: black;
+      display: block;
     }
 
     .filter-menu-group-title.active {
       text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 2px;
     }
 
     .filter-menu-items {
@@ -491,30 +310,16 @@ if (!empty($category)) {
       color: #6b7280;
     }
 
-    .filter-menu-items li {
-      margin: 0.1rem 0;
-    }
-
     .filter-menu-items li a {
-      border: none;
-      background: transparent;
-      padding: 0;
-      margin: 0;
       font-size: 0.78rem;
       color: inherit;
-      cursor: pointer;
-      text-align: left;
-      text-decoration: none;
       display: block;
     }
 
-    .filter-menu-items li a:hover {
-      color: black;
-    }
+    .filter-menu-items li a:hover { color: black; }
 
-    .product-list-section {
-      margin-bottom: 2rem;
-    }
+    /* Sort */
+    .product-list-section { margin-bottom: 2rem; }
 
     .product-list-header {
       display: flex;
@@ -525,20 +330,9 @@ if (!empty($category)) {
       flex-wrap: wrap;
     }
 
-    .product-list-heading {
-      font-size: 1.05rem;
-      font-weight: 600;
-    }
+    .product-list-heading { font-size: 1.05rem; font-weight: 600; }
 
-    .product-sort {
-      position: relative;
-      font-size: 0.85rem;
-      color: #6b7280;
-    }
-
-    .sort-dropdown {
-      position: relative;
-    }
+    .sort-dropdown { position: relative; }
 
     .sort-toggle {
       display: flex;
@@ -549,25 +343,14 @@ if (!empty($category)) {
       border: 1px solid #e5e7eb;
       background: white;
       cursor: pointer;
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
       font-size: 0.85rem;
-      text-decoration: none;
       color: inherit;
     }
 
-    .sort-label {
-      color: #6b7280;
-    }
-
-    .sort-value {
-      font-weight: 600;
-      color: black;
-    }
-
-    .sort-chevron {
-      margin-left: 0.15rem;
-      font-size: 0.75rem;
-    }
+    .sort-label { color: #6b7280; }
+    .sort-value { font-weight: 600; color: black; }
+    .sort-chevron { margin-left: 0.15rem; font-size: 0.75rem; }
 
     .sort-menu {
       position: absolute;
@@ -583,9 +366,7 @@ if (!empty($category)) {
       z-index: 25;
     }
 
-    .sort-menu.is-open {
-      display: block;
-    }
+    .sort-menu.is-open { display: block; }
 
     .sort-option {
       width: 100%;
@@ -596,19 +377,13 @@ if (!empty($category)) {
       font-size: 0.86rem;
       color: black;
       cursor: pointer;
-      text-decoration: none;
       display: block;
     }
 
-    .sort-option:hover {
-      background: #f9fafb;
-    }
+    .sort-option:hover { background: #f9fafb; }
+    .sort-option.is-active { font-weight: 600; background: #f3f4f6; }
 
-    .sort-option.is-active {
-      font-weight: 600;
-      background: #f3f4f6;
-    }
-
+    /* Product Grid */
     .product-list-grid {
       display: grid;
       gap: 1.25rem;
@@ -617,43 +392,33 @@ if (!empty($category)) {
     }
 
     @media (max-width: 1024px) {
-      .product-list-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
+      .product-list-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
     @media (max-width: 768px) {
-      .product-list-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .product-list-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 520px) {
-      .product-list-grid {
-        grid-template-columns: 1fr;
-      }
+      .product-list-grid { grid-template-columns: 1fr; }
     }
 
     .product-card {
-      border-radius: 0.9rem;
+      border-radius: 10px;
       border: 1px solid #e5e7eb;
       overflow: hidden;
-      background: #f9fafb;
+      background: white;
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      transition: box-shadow 0.2s ease, transform 0.2s ease,
-        border-color 0.2s ease, background 0.2s ease;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
       height: 100%;
-      text-decoration: none;
       color: inherit;
     }
 
     .product-card:hover {
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-      transform: translateY(-2px);
-      border-color: #d1d5db;
-      background: white;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      transform: translateY(-3px);
     }
 
     .product-card-img {
@@ -678,48 +443,6 @@ if (!empty($category)) {
       display: block;
     }
 
-    .product-wishlist-btn {
-      position: absolute;
-      top: 0.55rem;
-      right: 0.55rem;
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      background: rgba(255, 255, 255, 0.96);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
-      transition: background 0.15s ease, transform 0.12s ease,
-                  border-color 0.15s ease, box-shadow 0.15s ease;
-      z-index: 2;
-    }
-
-    .product-wishlist-btn::before {
-      content: "\2661";
-      font-size: 15px;
-      color: black;
-      line-height: 1;
-    }
-
-    .product-wishlist-btn:hover {
-      transform: translateY(-1px);
-      background: white;
-    }
-
-    .product-wishlist-btn.is-active {
-      background: white;
-      border-color: black;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.4);
-    }
-
-    .product-wishlist-btn.is-active::before {
-      content: "\2665";
-      color: #dc2626;
-    }
-
     .product-card-body {
       padding: 0.6rem 0.7rem 0.8rem;
       font-size: 0.85rem;
@@ -728,15 +451,8 @@ if (!empty($category)) {
       gap: 0.15rem;
     }
 
-    .product-card-name {
-      font-weight: 500;
-      color: #111827;
-    }
-
-    .product-card-meta {
-      font-size: 0.75rem;
-      color: #6b7280;
-    }
+    .product-card-name { font-weight: 500; color: #111827; }
+    .product-card-meta { font-size: 0.75rem; color: #6b7280; }
 
     .product-card-price {
       font-size: 0.9rem;
@@ -745,210 +461,133 @@ if (!empty($category)) {
       font-weight: 600;
     }
 
-    .product-card-old-price {
-      font-size: 0.8rem;
-      color: #9ca3af;
-      text-decoration: line-through;
-      margin-left: 5px;
+    
+    @media (max-width: 900px) {
+      .filter-row { flex-direction: column; align-items: stretch; }
+      .filter-controls { justify-content: space-between; }
+      .filter-search { flex: 1; }
     }
 
-    .product-card-rating {
-      color: #f59e0b;
-      font-size: 0.8rem;
-      margin-top: 2px;
+    @media (max-width: 600px) {
+       
     }
 
-    #backToTop {
-      position: fixed;
-      right: 24px;
-      bottom: 24px;
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      border: none;
-      background: black;
-      color: white;
-      font-size: 22px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
-      opacity: 0;
-      transform: translateY(8px);
-      pointer-events: none;
-      transition: opacity 0.18s ease, transform 0.18s ease;
-      z-index: 40;
+    @media (max-width: 640px) {
+      .filter-menu { left: 0.9rem; right: 0.9rem; width: auto; }
+      .filter-menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-
-    #backToTop.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    #backToTop:hover {
-      background: #111827;
-    }
-
+         
+            /* FOOTER — matches index.php */
     footer {
-      background: #111827;
-      color: #ffffff;
-      padding: 3rem 1.5rem 2rem;
-      margin-top: 3rem;
+      background: #111 !important;
+      color: white !important;
+      padding: 50px 20px 30px !important;
+      margin-top: 40px !important;
+      display: block !important;
+      width: 100% !important;
     }
 
-    .footer-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2.5rem;
+    .footer-grid {
+      max-width: 1200px !important;
+      margin: 0 auto !important;
+      display: grid !important;
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 40px !important;
+      padding: 0 1.5rem !important;
     }
 
     .footer-col h4 {
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-
-    .footer-col p {
-      font-size: 0.9rem;
-      color: #d1d5db;
+      margin-bottom: 20px;
+      font-size: 16px;
     }
 
     .footer-col ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      line-height: 1.9;
+      list-style: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
     }
 
-    .footer-col ul li a {
-      color: #d1d5db;
-      font-size: 0.9rem;
-      text-decoration: none;
-      transition: 0.2s;
+    .footer-col li {
+      margin-bottom: 10px;
     }
 
-    .footer-col ul li a:hover {
-      color: #ffffff;
+    .footer-col a {
+      color: #d1d5db !important;
+      text-decoration: none !important;
     }
 
-    .footer-socials {
+    .footer-col a:hover {
+      color: white !important;
+    }
+
+    .social-icons {
       display: flex;
-      gap: 0.75rem;
-      margin-top: 0.8rem;
+      gap: 15px;
+      margin-top: 15px;
     }
 
-    .footer-socials i {
-      font-size: 1.35rem;
-      color: #f3f4f6;
-      background: #1f2937;
-      padding: 0.6rem;
-      border-radius: 50%;
-      transition: 0.2s ease;
+    .social-icons i {
+      font-size: 20px;
       cursor: pointer;
+      color: #f3f4f6;
     }
 
-    .footer-socials i:hover {
-      background: #f3f4f6;
-      color: #111827;
-      transform: translateY(-2px);
-    }
-
-    .footer-col-right {
-      text-align: right;
-    }
-
-    .footer-col-right .footer-socials {
-      justify-content: flex-end;
-    }
-
-    .footer-app {
-      margin-top: 1.4rem;
-    }
-
-    .footer-app h5 {
-      font-size: 0.95rem;
-      margin-bottom: 0.6rem;
-      font-weight: 600;
-    }
-
-    .store-badges {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      align-items: flex-end;
-    }
-
-    .store-badges img {
-      width: 150px;
-      height: auto;
-      display: block;
-      border-radius: 0.35rem;
-    }
-
-    .footer-bottom {
+    .copyright {
       text-align: center;
-      margin-top: 2.4rem;
-      padding-top: 1.6rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
-      font-size: 0.85rem;
-      color: #d1d5db;
-    }
-
-    @media (max-width: 760px) {
-      .footer-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 520px) {
-      .footer-container {
-        grid-template-columns: 1fr;
-      }
-      .footer-col {
-        text-align: center;
-      }
-      .footer-socials {
-        justify-content: center;
-      }
-      .footer-col-right {
-        text-align: center;
-      }
-      .footer-col-right .footer-socials {
-        justify-content: center;
-      }
-      .store-badges {
-        align-items: center;
-      }
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #333;
+      color: #888;
+      font-size: 14px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }                
+                        
+                        
+             
   </style>
 </head>
 
-<body>
-  <div class="page">
-    <header>
-      <div class="logo">
-        <a href="index.php"><img src="logo.png" alt="EveryWear Logo"></a>
-      </div>
-      <nav class="header-nav">
-        <a href="index.php">Home</a>
-        <a href="products.php" class="active">Shop</a>
-        <a href="about.php">About</a>
-        <a href="orders.php">Orders</a>
-      </nav>
-      <div class="user-controls">
+<body> 
+  <!-- NAVBAR  -->
+    <div class="navbar">
+    <div class="logo-section">
+      <a href="index.php" class="logo-link">
+        <img src="logo.png" alt="EveryWear Logo" class="site-logo">
+      </a>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="index.php"    class="nav-button">Home</a>
+      <a href="about.php"    class="nav-button">About Us</a>
+      <a href="products.php" class="nav-button active">Products</a>
+      <a href="reviews.php"  class="nav-button">Reviews</a>
+      <a href="orders.php"   class="nav-button">Orders</a>
+    </div>
+
+    <div class="right-controls">
+      <div class="right-default">
         <?php if ($isLoggedIn): ?>
           <span class="welcome-msg">Welcome, <?php echo htmlspecialchars($userName); ?>!</span>
-          <a href="logout.php" class="logout-btn">Log Out</a>
+          <a href="logout.php" class="logout-btn">Logout</a>
         <?php else: ?>
-          <a href="login.php" class="login-btn">Log In</a>
+          <a href="login.php" class="login-btn">Log in</a>
           <a href="create-account.php" class="create-btn">Create Account</a>
         <?php endif; ?>
-      </div>
-    </header>
 
+        <a href="cart.php" class="icon-link">
+          <img src="basket.png" alt="Cart" class="nav-icon">
+          <?php if($cartCount > 0): ?>
+            <span class="cart-count-badge"><?php echo $cartCount; ?></span>
+          <?php endif; ?>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= PAGE CONTENT ======= -->
+  <div class="page">
     <section class="filter-row">
       <div class="filter-breadcrumb">
         <a href="index.php">Home</a>
@@ -962,7 +601,7 @@ if (!empty($category)) {
 
       <div class="filter-controls">
         <form method="GET" action="products.php" class="filter-search" id="searchForm">
-          <span class="filter-search-icon" aria-hidden="true"></span>
+          <i class="ri-search-line" style="color: #6b7280;"></i>
           <input
             id="searchInput"
             name="search"
@@ -974,28 +613,31 @@ if (!empty($category)) {
           <input type="hidden" name="sort" value="<?php echo htmlspecialchars($sort); ?>">
         </form>
 
-        <button class="icon-btn wishlist-btn" id="wishlistToggle" aria-label="View wishlist"></button>
-
         <button class="icon-btn hamburger-btn" id="filterMenuToggle" aria-label="Browse categories" aria-expanded="false">
           <span></span>
         </button>
       </div>
 
+      <!-- Browse by category now uses grouped categories -->
       <div class="filter-menu" id="filterMenu" aria-hidden="true">
         <div class="filter-menu-header">
           <div class="filter-menu-title">Browse by category</div>
         </div>
 
         <div class="filter-menu-grid">
-          <?php if (!empty($categories)): ?>
-            <?php foreach ($categories as $cat): ?>
+          <?php if (!empty($groupedCategories)): ?>
+            <?php foreach ($groupedCategories as $group => $items): ?>
               <div>
-                <a href="products.php?category=<?php echo urlencode($cat); ?>" 
-                   class="filter-menu-group-title <?php echo ($category === $cat) ? 'active' : ''; ?>">
-                  <?php echo htmlspecialchars($cat); ?>
-                </a>
+                <a href="products.php?search=<?php echo urlencode($group); ?>" class="filter-menu-group-title"><?php echo htmlspecialchars($group); ?></a>
                 <ul class="filter-menu-items">
-                  <li><a href="products.php?category=<?php echo urlencode($cat); ?>">All <?php echo htmlspecialchars($cat); ?></a></li>
+                  <?php foreach ($items as $item): ?>
+                    <li>
+                      <a href="products.php?category=<?php echo urlencode($item['full']); ?>"
+                         <?php echo ($category === $item['full']) ? 'style="color:black;font-weight:600;"' : ''; ?>>
+                        <?php echo htmlspecialchars($item['item'] ?? $group); ?>
+                      </a>
+                    </li>
+                  <?php endforeach; ?>
                 </ul>
               </div>
             <?php endforeach; ?>
@@ -1009,7 +651,7 @@ if (!empty($category)) {
     <section class="product-list-section">
       <div class="product-list-header">
         <h2 class="product-list-heading">
-          <?php 
+          <?php
           if (!empty($category)) {
             echo htmlspecialchars($category) . " Collection";
           } elseif (!empty($search)) {
@@ -1023,32 +665,30 @@ if (!empty($category)) {
           </span>
         </h2>
 
-        <div class="product-sort">
-          <div class="sort-dropdown" id="sortDropdown">
-            <a href="#" class="sort-toggle" id="sortToggle">
-              <span class="sort-label">Sort by :</span>
-              <span class="sort-value" id="sortCurrent">
-                <?php
-                $sortLabels = [
-                  'recommended' => 'Recommended',
-                  'new' => "What's New",
-                  'rating' => 'Customer Rating',
-                  'price-desc' => 'Price: High to Low',
-                  'price-asc' => 'Price: Low to High'
-                ];
-                echo $sortLabels[$sort] ?? 'Recommended';
-                ?>
-              </span>
-              <span class="sort-chevron">▾</span>
-            </a>
-            <div class="sort-menu" id="sortMenu">
-              <?php foreach ($sortLabels as $key => $label): ?>
-                <a href="products.php?category=<?php echo urlencode($category); ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $key; ?>" 
-                   class="sort-option <?php echo ($sort === $key) ? 'is-active' : ''; ?>">
-                  <?php echo $label; ?>
-                </a>
-              <?php endforeach; ?>
-            </div>
+        <div class="sort-dropdown" id="sortDropdown">
+          <a href="#" class="sort-toggle" id="sortToggle">
+            <span class="sort-label">Sort by :</span>
+            <span class="sort-value" id="sortCurrent">
+              <?php
+              $sortLabels = [
+                'recommended' => 'Recommended',
+                'new' => "What's New",
+                'rating' => 'Customer Rating',
+                'price-desc' => 'Price: High to Low',
+                'price-asc' => 'Price: Low to High'
+              ];
+              echo $sortLabels[$sort] ?? 'Recommended';
+              ?>
+            </span>
+            <span class="sort-chevron">▾</span>
+          </a>
+          <div class="sort-menu" id="sortMenu">
+            <?php foreach ($sortLabels as $key => $label): ?>
+              <a href="products.php?category=<?php echo urlencode($category); ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $key; ?>"
+                 class="sort-option <?php echo ($sort === $key) ? 'is-active' : ''; ?>">
+                <?php echo $label; ?>
+              </a>
+            <?php endforeach; ?>
           </div>
         </div>
       </div>
@@ -1065,22 +705,20 @@ if (!empty($category)) {
               <div class="product-card-img">
                 <div class="product-card-img-inner">
                   <?php if (!empty($product['image_main'])): ?>
-                    <img src="<?php echo htmlspecialchars($product['image_main']); ?>" 
-                         alt="<?php echo htmlspecialchars($product['name']); ?>" 
-                         style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="<?php echo htmlspecialchars($product['image_main']); ?>"
+                         alt="<?php echo htmlspecialchars($product['name']); ?>">
                   <?php else: ?>
                     <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #6b7280;">
                       No Image
                     </div>
                   <?php endif; ?>
                 </div>
-                <button type="button" class="product-wishlist-btn" data-id="<?php echo $product['product_id']; ?>"></button>
               </div>
               <div class="product-card-body">
                 <div class="product-card-name"><?php echo htmlspecialchars($product['name']); ?></div>
                 <div class="product-card-meta">
-                  <?php echo htmlspecialchars($product['category'] ?? 'Uncategorized'); ?> · 
-                  <?php 
+                  <?php echo htmlspecialchars($product['category'] ?? 'Uncategorized'); ?> ·
+                  <?php
                   if (!empty($product['materials'])) {
                     echo htmlspecialchars(substr($product['materials'], 0, 50));
                     if (strlen($product['materials']) > 50) echo '...';
@@ -1110,67 +748,64 @@ if (!empty($category)) {
     </section>
   </div>
 
+  <!-- FOOTER -->
   <footer>
-    <!-- Keep your footer HTML as before -->
-    <div class="footer-container">
+    <div class="footer-grid">
       <div class="footer-col">
         <h4>Shop</h4>
         <ul>
-          <?php foreach ($categories as $cat): ?>
-            <li><a href="products.php?category=<?php echo urlencode($cat); ?>"><?php echo htmlspecialchars($cat); ?></a></li>
+          <?php foreach ($groupedCategories as $group => $items): ?>
+            <li><a href="products.php?search=<?php echo urlencode($group); ?>"><?php echo htmlspecialchars($group); ?></a></li>
           <?php endforeach; ?>
         </ul>
       </div>
 
       <div class="footer-col">
-        <h4>Customer Service</h4>
+        <h4>Help</h4>
         <ul>
-          <li><a href="#">Delivery & Returns</a></li>
-          <li><a href="#">10% Student Discount</a></li>
-          <li><a href="#">FAQs</a></li>
-          <li><a href="orders.php">My Orders</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Shipping Info</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">FAQ</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
-        <h4>Join Now</h4>
+        <h4>About</h4>
         <ul>
-          <li><a href="create-account.php">Create Account for exclusive benefits!</a></li>
+          <li><a href="about.php">Our Story</a></li>
+          <li><a href="#">Sustainability</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
         </ul>
       </div>
 
-      <div class="footer-col footer-col-right">
-        <h4>EveryWear</h4>
-        <p>Designed for all.</p>
-        <p>Follow Us On:</p>
-        <div class="footer-socials">
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <div class="social-icons">
           <i class="ri-instagram-line"></i>
+          <i class="ri-facebook-circle-line"></i>
+          <i class="ri-twitter-line"></i>
           <i class="ri-tiktok-line"></i>
-          <i class="ri-youtube-line"></i>
         </div>
+        <p style="margin-top: 20px; color: #aaa; font-size: 14px;">
+          Student project for university
+        </p>
       </div>
     </div>
 
-    <div class="footer-bottom">
-      © 2025 EveryWear. All rights reserved.
+    <div class="copyright">
+      &copy; 2025 EveryWear. This is a university project.
     </div>
   </footer>
 
-  <button id="backToTop" aria-label="Back to top">↑</button>
-
   <script>
-    // Simplified JavaScript - removed type-related code
-    const wishlistToggle = document.getElementById("wishlistToggle");
-    const viewAllLink = document.getElementById("viewAllLink");
-    const backToTopBtn = document.getElementById("backToTop");
     const searchForm = document.getElementById("searchForm");
     const searchInput = document.getElementById("searchInput");
     const sortToggle = document.getElementById("sortToggle");
     const sortMenu = document.getElementById("sortMenu");
     const menuToggleBtn = document.getElementById("filterMenuToggle");
     const filterMenu = document.getElementById("filterMenu");
-
-    const wishlist = new Set();
 
     // Search form submission
     searchInput.addEventListener("keypress", function (e) {
@@ -1220,41 +855,6 @@ if (!empty($category)) {
         if (filterMenu.classList.contains("is-open")) toggleMenu(false);
         if (sortMenu.classList.contains("is-open")) sortMenu.classList.remove("is-open");
       }
-    });
-
-    // Wishlist functionality
-    function updateWishlistIcon() {
-      wishlistToggle.classList.toggle("has-items", wishlist.size > 0);
-    }
-
-    // Attach wishlist handlers
-    document.querySelectorAll(".product-wishlist-btn").forEach(function (btn) {
-      btn.onclick = function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const id = btn.dataset.id;
-        if (wishlist.has(id)) {
-          wishlist.delete(id);
-          btn.classList.remove("is-active");
-        } else {
-          wishlist.add(id);
-          btn.classList.add("is-active");
-        }
-        updateWishlistIcon();
-      };
-    });
-
-    // Back to top button
-    window.addEventListener("scroll", function () {
-      if (window.scrollY > 350) {
-        backToTopBtn.classList.add("is-visible");
-      } else {
-        backToTopBtn.classList.remove("is-visible");
-      }
-    });
-
-    backToTopBtn.addEventListener("click", function () {
-      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   </script>
 </body>
