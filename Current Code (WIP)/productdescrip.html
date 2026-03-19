@@ -893,6 +893,29 @@ input {
       }
     }
     
+    .review-btn-bottom {
+        position: fixed;        /* stick to viewport */
+        bottom: 20px;           /* distance from bottom */
+        left: 20px;             /* distance from left */
+        padding: 14px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        background: linear-gradient(to right, #30CDF5, #00FAA0); /* site gradient */
+        color: #000;            /* black text for contrast */
+        border: 2px solid #30CDF5; /* matching gradient start */
+        border-radius: 8px;
+        cursor: pointer;
+        z-index: 1000;
+        transition: background 0.25s, color 0.25s, transform 0.2s;
+}
+
+    .review-btn-bottom:hover {
+        background: #ffffff;          /* invert to white on hover */
+        color: #30CDF5;               /* gradient start color for text */
+        border-color: #00FAA0;        /* gradient end color for border */
+        transform: scale(1.05);       /* subtle grow effect */
+    }
+
     </style>
 
 </head>
@@ -964,6 +987,10 @@ input {
             <img src="images/tshirts4.png" onclick="changeImage(this)">
         </div>
     </div>
+
+    <button class="review-btn-bottom" onclick="goToReviews(); window.location.href='writereviews.html';">
+        Write Reviews
+    </button>
 
     <div class="right-info">
         <div id="productName" class="product-title">Boxy Logo T-Shirt - Black</div>
@@ -1260,6 +1287,11 @@ window.addEventListener('hashchange', checkAndOpenCart);
 // Check immediately if page is already loaded
 if (document.readyState === 'complete') {
     checkAndOpenCart();
+}
+
+function goToReviews() {
+    const reviewsSection = document.querySelector(".description"); 
+    reviewsSection.scrollIntoView({ behavior: "smooth" });
 }
 </script>
 
