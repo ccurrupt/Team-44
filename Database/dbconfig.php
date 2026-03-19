@@ -1,9 +1,9 @@
 <?php
 // Database connection
-$host = getenv('DB_HOST') ?: 'localhost';
-$db   = getenv('DB_NAME') ?: 'your_database_name';
-$user = getenv('DB_USER') ?: 'your_database_user';
-$pass = getenv('DB_PASS') ?: '';
+$host = 'localhost';
+$db   = 'cs2team44_db';
+$user = 'cs2team44';
+$pass = 'wpRwMNcuA4uajOG92dzRRqbhb';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
@@ -11,4 +11,7 @@ try {
 } catch(PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
 }
+
+// Start session
+session_start();
 ?>
