@@ -233,9 +233,9 @@ foreach ($_SESSION['cart'] as $item) {
     </div>
 
     <div class="nav-buttons">
-        <a href="index.php"    class="nav-button">Home</a>
+        
         <a href="about.php"    class="nav-button">About Us</a>
-        <a href="products.php" class="nav-button">Products</a>
+        <a href="productline.php" class="nav-button">Products</a>
         <a href="reviews.php"  class="nav-button">Reviews</a>
         <a href="orders.php"   class="nav-button active">Orders</a>
     </div>
