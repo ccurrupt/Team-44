@@ -1,10 +1,20 @@
+<?php
+session_start();
+$isLoggedIn = isset($_SESSION['user_id']);
+$userName   = $isLoggedIn ? ($_SESSION['first_name'] ?? 'User') : '';
+
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+$cartCount = count($_SESSION['cart']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EveryWear - About Us</title>
-	<link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="images/logo.png">
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet"/>
     <style>
@@ -16,7 +26,7 @@
         }
 
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: "Inter", Arial, sans-serif;
             background: white;
             color: black;
             line-height: 1.5;
@@ -382,52 +392,45 @@
 <body>
     <!-- TOP NAVIGATION -->
     <div class="navbar">
-
-        <!-- LOGO -->
         <div class="logo-section">
-            <a href="EveryWear Homepage.php" class="logo-link" aria-label="Go to homepage">
+            <a href="index.php" class="logo-link" aria-label="Go to homepage">
                 <img src="images/logo.png" loading="eager" alt="EveryWear Logo" width="120" height="90" class="site-logo">
             </a>
         </div>
 
-        <!-- NAV BUTTONS -->
         <div class="nav-buttons">
-   			 <a href="index.php" class="nav-button">Home</a>
-   			 <a href="about.php" class="nav-button active">About Us</a>
-  			 <a href="products.php" class="nav-button">Products</a>
-  			 <a href="reviews.php" class="nav-button">Reviews</a>
-  			 <a href="orders.php" class="nav-button">Orders</a>
-		</div>
+            <a href="about.php" class="nav-button active">About Us</a>
+            <a href="productline.php" class="nav-button">Products</a>
+            <a href="reviews.php" class="nav-button">Reviews</a>
+            <a href="contact.php" class="nav-button">Contact Us</a>
+        </div>
 
-        <!-- RIGHT SIDE: Login / Create Account / Basket / Search -->
         <div class="right-controls" id="rightControls">
-
-
-            <!-- Default icons (visible normally) -->
             <div class="right-default" id="rightDefault">
-                <a href="login.php" class="login-btn">Log in</a>
-                <a href="create-account.php" class="create-btn">Create Account</a>
+                <?php if ($isLoggedIn): ?>
+                    <span class="welcome-msg">Hi <?php echo htmlspecialchars($userName); ?>!</span>
+                    <a href="logout.php" class="login-btn">Logout</a>
+                <?php else: ?>
+                    <a href="login.php" class="login-btn">Log in</a>
+                    <a href="create-account.php" class="create-btn">
+                        <img src="images/account.png" alt="" class="btn-icon">
+                        Create Account
+                    </a>
+                <?php endif; ?>
 
-                <a href="product-detail.php#open-cart.php" class="icon-link">
-                    <img src="basket.png" alt="Basket" class="nav-icon">
+                <a href="cart.php" class="icon-link" aria-label="Open basket">
+                    <img src="images/basket.png" alt="Basket" class="nav-icon">
+                    <?php if ($cartCount > 0): ?>
+                        <span class="cart-count-badge"><?php echo $cartCount; ?></span>
+                    <?php endif; ?>
                 </a>
 
-                <div class="icon-link search-icon" id="searchToggle">
-                    <img src="search.png" alt="Search" class="nav-icon">
-                </div>
-            </div>
-
-            <!-- Search bar overlay (hidden until search opens) -->
-            <div id="searchBar" class="search-bar-overlay">
-                <input type="text" placeholder="Search...">
-            </div>
-
-            <!-- Close icon (only visible when search is open) -->
-            <div class="icon-link search-close" id="searchClose">
-                <img src="search.png" alt="Close Search" class="nav-icon">
+                <button type="button" id="themeToggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+                    <span id="themeIcon">&#127769;</span>
+                </button>
             </div>
         </div>
-    </div>
+    </div> <!-- End of NAVBAR -->
 
     <!-- MAIN CONTENT FOR ABOUT US PAGE -->
     <div class="hero about-hero">
@@ -494,7 +497,7 @@
 
             <div class="about-section">
                 <h3>Contact Us</h3>
-                <p>If you have any questions, feedback or issues to report, feel free to reach out via our <a href="Contact Us.php">Contact Us</a> page. We'd love to hear from you!</p>
+                <p>If you have any questions, feedback or issues to report, feel free to reach out via our <a href="contact.php">Contact Us</a> page. We'd love to hear from you!</p>
             </div>
         </div>
     </div>
@@ -560,7 +563,7 @@
     </footer>
 
     <!-- Back to top button -->
-    <button id="backToTop" aria-label="Back to top">↑</button>
+    <button id="backToTop" aria-label="Back to top">?</button>
 
     <script>
     const searchToggle = document.getElementById("searchToggle");
@@ -606,5 +609,59 @@
         window.scrollTo({ top: 0, behavior: "smooth" });
     });
     </script>
+    
+    
+    <script>
+const searchToggle = document.getElementById("searchToggle");
+const searchClose = document.getElementById("searchClose");
+const searchBar = document.getElementById("searchBar");
+const rightDefault = document.getElementById("rightDefault");
+
+function openSearch() {
+    rightDefault.classList.add("hidden");
+    searchBar.classList.add("active");
+}
+
+function closeSearch() {
+    searchBar.classList.remove("active");
+    rightDefault.classList.remove("hidden");
+}
+
+searchToggle.addEventListener("click", () => {
+    if (searchBar.classList.contains("active")) {
+        closeSearch();
+    } else {
+        openSearch();
+    }
+});
+
+searchClose.addEventListener("click", closeSearch);
+
+/* DARK MODE - replaced below */
+</script>
+
+<script>
+/* DARK MODE - uses RemixIcon classes */
+document.addEventListener("DOMContentLoaded", () => {
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon   = document.getElementById("themeIcon");
+    if (themeToggle && themeIcon) {
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark");
+            themeIcon.className = "ri-sun-line";
+        }
+        themeToggle.addEventListener("click", () => {
+            document.body.classList.toggle("dark");
+            if (document.body.classList.contains("dark")) {
+                localStorage.setItem("theme", "dark");
+                themeIcon.className = "ri-sun-line";
+            } else {
+                localStorage.setItem("theme", "light");
+                themeIcon.className = "ri-moon-line";
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>
