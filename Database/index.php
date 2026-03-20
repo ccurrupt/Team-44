@@ -36,8 +36,11 @@
             <!-- Default icons (visible normally) -->
             <div class="right-default" id="rightDefault">
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <span class="welcome-msg">Hi <?php echo htmlspecialchars($_SESSION['first_name']); ?>!</span>
-                    <a href="logout.php" class="login-btn">Logout</a>
+    				<span class="welcome-msg">Hi <?php echo htmlspecialchars($_SESSION['first_name']); ?>!</span>
+    			<?php if (!empty($_SESSION['is_admin'])): ?>
+        			<a href="admin-orders.php" class="login-btn" style="background:#111;color:white;">Admin</a>
+    			<?php endif; ?>
+    				<a href="logout.php" class="login-btn">Logout</a>
                 <?php else: ?>
                     <a href="login.php" class="login-btn">Log in</a>
                     <a href="create-account.php" class="create-btn">
@@ -46,7 +49,7 @@
                     </a>
                 <?php endif; ?>
 
-                <a href="productdescrip.php#open-cart" class="icon-link">
+                <a href="cart.php" class="icon-link">
                     <img src="images/basket.png" alt="Basket" class="nav-icon">
                 </a>
 
@@ -56,8 +59,8 @@
 
                 <!-- DARK MODE TOGGLE -->
                 <button id="themeToggle" class="icon-link" aria-label="Toggle theme">
-                    🌙
-                </button>
+    					<span id="themeIcon">🌙</span>
+				</button>
             </div>
 
             <!-- Search bar overlay (hidden until search opens) -->
@@ -180,51 +183,52 @@
 
     <!-- SCRIPTS -->
     <script>
-    const searchToggle = document.getElementById("searchToggle");
-    const searchClose = document.getElementById("searchClose");
-    const searchBar = document.getElementById("searchBar");
-    const rightDefault = document.getElementById("rightDefault");
+const searchToggle = document.getElementById("searchToggle");
+const searchClose = document.getElementById("searchClose");
+const searchBar = document.getElementById("searchBar");
+const rightDefault = document.getElementById("rightDefault");
 
-    function openSearch() {
-        rightDefault.classList.add("hidden");
-        searchBar.classList.add("active");
+function openSearch() {
+    rightDefault.classList.add("hidden");
+    searchBar.classList.add("active");
+}
+
+function closeSearch() {
+    searchBar.classList.remove("active");
+    rightDefault.classList.remove("hidden");
+}
+
+searchToggle.addEventListener("click", () => {
+    if (searchBar.classList.contains("active")) {
+        closeSearch();
+    } else {
+        openSearch();
     }
+});
 
-    function closeSearch() {
-        searchBar.classList.remove("active");
-        rightDefault.classList.remove("hidden");
+searchClose.addEventListener("click", closeSearch);
+
+/* DARK MODE */
+const themeToggle = document.getElementById("themeToggle");
+const themeIcon = document.getElementById("themeIcon");
+
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+    themeIcon.textContent = "☀️";
+}
+
+themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+
+    if (document.body.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+        themeIcon.textContent = "☀️";
+    } else {
+        localStorage.setItem("theme", "light");
+        themeIcon.textContent = "🌙";
     }
-
-    searchToggle.addEventListener("click", () => {
-        if (searchBar.classList.contains("active")) {
-            closeSearch();
-        } else {
-            openSearch();
-        }
-    });
-
-    searchClose.addEventListener("click", closeSearch);
-
-    /* DARK MODE */
-    const themeToggle = document.getElementById("themeToggle");
-
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark");
-        themeToggle.textContent = "☀️";
-    }
-
-    themeToggle.addEventListener("click", () => {
-        document.body.classList.toggle("dark");
-
-        if (document.body.classList.contains("dark")) {
-            localStorage.setItem("theme", "dark");
-            themeToggle.textContent = "☀️";
-        } else {
-            localStorage.setItem("theme", "light");
-            themeToggle.textContent = "🌙";
-        }
-    });
-    </script>
+});
+</script>
 
 </body>
 </html>
