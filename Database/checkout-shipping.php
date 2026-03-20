@@ -359,15 +359,64 @@ footer { background: #111; color: white; padding: 50px 20px 30px; margin-top: 80
     </div>
 </div>
 
-<!-- FOOTER -->
+<!-- FOOTER (matching the rest of the site) -->
 <footer>
-    <div class="footer-grid">
-        <div class="footer-col"><h4>Shop</h4><ul><li><a href="products.php">Men</a></li><li><a href="products.php">Women</a></li><li><a href="products.php">Accessories</a></li><li><a href="products.php">New Arrivals</a></li></ul></div>
-        <div class="footer-col"><h4>Help</h4><ul><li><a href="contact.php">Contact Us</a></li><li><a href="checkout-shipping.php">Shipping Info</a></li><li><a href="#">Returns</a></li><li><a href="#">FAQ</a></li></ul></div>
-        <div class="footer-col"><h4>About</h4><ul><li><a href="about.php">Our Story</a></li><li><a href="#">Sustainability</a></li><li><a href="#">Careers</a></li><li><a href="#">Press</a></li></ul></div>
-        <div class="footer-col"><h4>Connect</h4><div class="social-icons"><i class="ri-instagram-line"></i><i class="ri-facebook-circle-line"></i><i class="ri-twitter-line"></i><i class="ri-tiktok-line"></i></div><p style="margin-top:20px;color:#aaa;font-size:14px;">Student project for university</p></div>
+    <div class="footer-container">
+        <div class="footer-col">
+            <h4>Shop</h4>
+            <ul>
+                <li><a href="productline.php?category=Tops">Tops</a></li>
+                <li><a href="productline.php?category=Bottoms">Bottoms</a></li>
+                <li><a href="productline.php?category=Outerwear">Outerwear</a></li>
+                <li><a href="productline.php?category=Footwear">Footwear</a></li>
+                <li><a href="productline.php?category=Accessories">Accessories</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Customer Service</h4>
+            <ul>
+                <li><a href="contact.php">Delivery &amp; Returns</a></li>
+                <li><a href="login.php">10% Student Discount</a></li>
+                <li><a href="contact.php">FAQs</a></li>
+                <li><a href="login.php">My Account</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Join Now</h4>
+            <ul>
+                <li><a href="create-account.php">Become a member today and get exclusive benefits!</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col footer-col-right">
+            <h4>EveryWear</h4>
+            <p>Designed for all.</p>
+            <p>Follow Us On:</p>
+            <div class="footer-socials">
+                <i class="ri-instagram-line"></i>
+                <i class="ri-tiktok-line"></i>
+                <i class="ri-youtube-line"></i>
+            </div>
+
+            <div class="footer-app">
+                <h5>Download Our App</h5>
+                <div class="store-badges">
+                    <a href="#" aria-label="Get it on Google Play">
+                        <img src="images/image1.png" alt="Get it on Google Play">
+                    </a>
+                    <a href="#" aria-label="Download on the App Store">
+                        <img src="images/image2.png" alt="Download on the App Store">
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="copyright">&copy; 2025 EveryWear. This is a university project.</div>
+
+    <div class="footer-bottom">
+        &copy; 2025 EveryWear. All rights reserved.
+    </div>
 </footer>
 
 <script>
