@@ -387,6 +387,22 @@ $cartCount = count($_SESSION['cart']);
             background: #111827;
             transform: translateY(-2px);
         }
+
+			/* DARK MODE TOGGLE BUTTON */
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px 6px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+}
+.theme-toggle-btn:hover { transform: scale(1.15); }
+
     </style>
 </head>
 <body>
@@ -637,30 +653,29 @@ searchToggle.addEventListener("click", () => {
 
 searchClose.addEventListener("click", closeSearch);
 
-/* DARK MODE - replaced below */
+
 </script>
 
 <script>
-/* DARK MODE - uses RemixIcon classes */
-document.addEventListener("DOMContentLoaded", () => {
-    const themeToggle = document.getElementById("themeToggle");
-    const themeIcon   = document.getElementById("themeIcon");
-    if (themeToggle && themeIcon) {
-        if (localStorage.getItem("theme") === "dark") {
-            document.body.classList.add("dark");
-            themeIcon.className = "ri-sun-line";
-        }
-        themeToggle.addEventListener("click", () => {
-            document.body.classList.toggle("dark");
-            if (document.body.classList.contains("dark")) {
-                localStorage.setItem("theme", "dark");
-                themeIcon.className = "ri-sun-line";
-            } else {
-                localStorage.setItem("theme", "light");
-                themeIcon.className = "ri-moon-line";
-            }
-        });
-    }
+/* DARK MODE */
+const themeToggle = document.getElementById("themeToggle");
+const themeIcon   = document.getElementById("themeIcon");
+
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark");
+  themeIcon.innerHTML = "&#9728;&#65039;";
+}
+
+themeToggle.addEventListener("click", function(e) {
+  e.stopPropagation();
+  document.body.classList.toggle("dark");
+  if (document.body.classList.contains("dark")) {
+    localStorage.setItem("theme", "dark");
+    themeIcon.innerHTML = "&#9728;&#65039;";
+  } else {
+    localStorage.setItem("theme", "light");
+    themeIcon.innerHTML = "&#127769;";
+  }
 });
 </script>
 </body>
