@@ -29,7 +29,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
 
     if (empty($formErrors)) {
         $formSuccess = true;
-        // TODO: send email / store in database here
+        //send email / store in database here
+    $stmt = $pdo->prepare("
+    	INSERT INTO contact_messages (name, email, subject, message)
+    	VALUES (:name, :email, :subject, :message)
+    ");
+	$stmt->execute([
+    	':name'    => $name,
+    	':email'   => $email,
+    	':subject' => $subject,
+    	':message' => $message,
+	]);
     }
 }
 ?>
@@ -319,43 +329,64 @@ footer {
 
 <body>
 
-<!-- ── NAVBAR ── -->
-<div class="navbar">
-    <div class="logo-section">
-        <a href="index.php" class="logo-link" aria-label="Go to homepage">
-            <img src="logo.png" loading="eager" alt="EveryWear Logo"
-                 width="120" height="90" class="site-logo">
-        </a>
-    </div>
+<body>
+  <!-- TOP NAVIGATION -->
+    <div class="navbar">
 
-    <div class="nav-buttons">
-        <a href="index.php"    class="nav-button">Home</a>
-        <a href="about.php"    class="nav-button">About Us</a>
-        <a href="products.php" class="nav-button">Products</a>
-        <a href="reviews.php"  class="nav-button">Reviews</a>
-        <a href="contact.php"  class="nav-button active">Contact Us</a>
-        <a href="orders.php"   class="nav-button">Orders</a>
-    </div>
-
-    <div class="right-controls">
-        <div class="right-default">
-            <?php if ($isLoggedIn): ?>
-                <span class="welcome-msg">Hi <?php echo htmlspecialchars($userName); ?>!</span>
-                <a href="logout.php" class="login-btn">Logout</a>
-            <?php else: ?>
-                <a href="login.php" class="login-btn">Log in</a>
-                <a href="create-account.php" class="create-btn">Create Account</a>
-            <?php endif; ?>
-
-            <a href="cart.php" class="icon-link">
-                <i class="ri-shopping-cart-line" style="font-size: 22px;"></i>
-                <?php if ($cartCount > 0): ?>
-                    <span class="cart-count-badge"><?php echo $cartCount; ?></span>
-                <?php endif; ?>
+        <!-- LOGO -->
+        <div class="logo-section">
+            <a href="index.php" class="logo-link" aria-label="Go to homepage">
+                <img src="images/logo.png" loading="eager" alt="EveryWear Logo" width="120" height="90" class="site-logo">
             </a>
         </div>
-    </div>
-</div>
+
+        <!-- NAV BUTTONS -->
+        <div class="nav-buttons">
+            <a href="about.php" class="nav-button">About Us</a>
+            <a href="productline.php" class="nav-button">Products</a>
+            <a href="reviews.php" class="nav-button">Reviews</a>
+            <a href="contact.php" class="nav-button">Contact Us</a>
+        </div>
+
+        <!-- RIGHT SIDE: Login / Create Account / Basket / Search -->
+        <div class="right-controls" id="rightControls">
+
+            <!-- Default icons (visible normally) -->
+            <div class="right-default" id="rightDefault">
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <span class="welcome-msg">Hi <?php echo htmlspecialchars($_SESSION['first_name']); ?>!</span>
+                    <a href="logout.php" class="login-btn">Logout</a>
+                <?php else: ?>
+                    <a href="login.php" class="login-btn">Log in</a>
+                    <a href="create-account.php" class="create-btn">
+                        <img src="images/account.png" alt="" class="btn-icon">
+                        Create Account
+                    </a>
+                <?php endif; ?>
+
+                <a href="cart.php" class="icon-link">
+                    <img src="images/basket.png" alt="Basket" class="nav-icon">
+                </a>
+
+                <div class="icon-link search-icon" id="searchToggle">
+                    <img src="images/search.png" alt="Search" class="nav-icon">
+                </div>
+
+                <!-- DARK MODE TOGGLE -->
+                <button id="themeToggle" class="icon-link" aria-label="Toggle theme"><i id="themeIcon" class="ri-moon-line"></i></button>
+            </div>
+
+            <!-- Search bar overlay (hidden until search opens) -->
+            <div id="searchBar" class="search-bar-overlay">
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <!-- Close icon (only visible when search is open) -->
+            <div class="icon-link search-close" id="searchClose">
+                <img src="images/search.png" alt="Close Search" class="nav-icon">
+            </div>
+        </div>
+    </div> <!-- End of NAVBAR -->
 
 <!-- ── CONTACT FORM ── -->
 <div class="contact-wrapper">
@@ -485,5 +516,29 @@ if (successAlert) {
 }
 </script>
 
+
+<script>
+/* DARK MODE - uses RemixIcon classes */
+document.addEventListener("DOMContentLoaded", () => {
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon   = document.getElementById("themeIcon");
+    if (themeToggle && themeIcon) {
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark");
+            themeIcon.className = "ri-sun-line";
+        }
+        themeToggle.addEventListener("click", () => {
+            document.body.classList.toggle("dark");
+            if (document.body.classList.contains("dark")) {
+                localStorage.setItem("theme", "dark");
+                themeIcon.className = "ri-sun-line";
+            } else {
+                localStorage.setItem("theme", "light");
+                themeIcon.className = "ri-moon-line";
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>
