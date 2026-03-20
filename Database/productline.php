@@ -8,6 +8,8 @@ if (!isset($_SESSION['cart'])) {
 }
 
 // Handle cart actions
+$cartJustUpdated = false;
+
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
         case 'add':
@@ -33,7 +35,7 @@ if (isset($_GET['action'])) {
                     ];
                 }
             }
-            header('Location: productline.php');
+            header('Location: productline.php?cart=open');
             exit();
         case 'update':
             if (isset($_GET['index'], $_GET['change'])) {
@@ -47,7 +49,7 @@ if (isset($_GET['action'])) {
                     }
                 }
             }
-            header('Location: productline.php');
+            header('Location: productline.php?cart=open');
             exit();
         case 'remove':
             if (isset($_GET['index'])) {
@@ -57,7 +59,7 @@ if (isset($_GET['action'])) {
                     $_SESSION['cart'] = array_values($_SESSION['cart']);
                 }
             }
-            header('Location: productline.php');
+            header('Location: productline.php?cart=open');
             exit();
     }
 }
@@ -72,6 +74,7 @@ foreach ($_SESSION['cart'] as $item) {
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>EveryWear</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css"
@@ -417,7 +420,29 @@ foreach ($_SESSION['cart'] as $item) {
       transition: background 0.2s;
     }
     .btn-checkout:hover { background: #000; }
-
+	
+                         
+        .btn-view-cart {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #fff;
+      color: #111827;
+      text-align: center;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 2px solid #111827;
+      transition: background 0.2s, color 0.2s;
+      margin-bottom: 8px;
+    }
+    .btn-view-cart:hover {
+      background: #111827;
+      color: #fff;
+    }                     
+                         
+                         
     @media (max-width: 768px) {
       .site-logo, .logo-section img {
         height: 64px;
@@ -1260,9 +1285,9 @@ foreach ($_SESSION['cart'] as $item) {
           <div class="cart-item-details">
             <strong><?php echo htmlspecialchars($item['name']); ?></strong>
             <span>Size: <?php echo htmlspecialchars($item['size']); ?></span><br>
-            <span>£<?php echo number_format($item['price'], 2); ?></span>
+            <span>&pound;<?php echo number_format($item['price'], 2); ?></span>
             <div class="quantity-controls">
-              <a href="productline.php?action=update&index=<?php echo $index; ?>&change=-1" class="qty-btn">?</a>
+              <a href="productline.php?action=update&index=<?php echo $index; ?>&change=-1" class="qty-btn">&minus;</a>
               <span><?php echo $item['quantity']; ?></span>
               <a href="productline.php?action=update&index=<?php echo $index; ?>&change=1" class="qty-btn">+</a>
             </div>
@@ -1275,9 +1300,10 @@ foreach ($_SESSION['cart'] as $item) {
     <?php endif; ?>
   </div>
 
-  <?php if (!empty($_SESSION['cart'])): ?>
+    <?php if (!empty($_SESSION['cart'])): ?>
   <div class="cart-footer">
-    <div class="cart-total">Total: £<?php echo number_format($cartTotal, 2); ?></div>
+    <div class="cart-total">Total: &pound;<?php echo number_format($cartTotal, 2); ?></div>
+    <a href="cart.php" class="btn-view-cart">View Cart</a>
     <a href="checkout.php" class="btn-checkout">Go to Checkout</a>
   </div>
   <?php endif; ?>
@@ -1957,6 +1983,15 @@ foreach ($_SESSION['cart'] as $item) {
             "&image=" + encodeURIComponent(imgEl ? imgEl.src : "");
         };
       });
+    }
+    
+        // Auto-open cart if redirected after cart action
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('cart') === 'open') {
+      openCart();
+      // Clean the URL so refreshing doesn't re-open
+      const cleanUrl = window.location.pathname;
+      window.history.replaceState({}, '', cleanUrl);
     }
 
   </script>
