@@ -7,6 +7,8 @@ $userName   = $isLoggedIn ? ($_SESSION['first_name'] ?? 'User') : '';
 if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
+
+$cartCount = count($_SESSION['cart']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -151,6 +153,21 @@ if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
     background: #e0e0e0;
     transform: scale(1.03);
 }
+
+/* DARK MODE TOGGLE BUTTON */
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px 6px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+}
+.theme-toggle-btn:hover { transform: scale(1.15); }
     </style>
 </head>
 
@@ -174,10 +191,8 @@ if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
             <a href="contact.php" class="nav-button">Contact Us</a>
         </div>
 
-        <!-- RIGHT SIDE: Login / Create Account / Basket / Search -->
+        <!-- RIGHT SIDE (matches productline.php) -->
         <div class="right-controls" id="rightControls">
-
-            <!-- Default icons (visible normally) -->
             <div class="right-default" id="rightDefault">
                 <?php if ($isLoggedIn): ?>
                     <span class="welcome-msg">Hi <?php echo htmlspecialchars($userName); ?>!</span>
@@ -190,28 +205,17 @@ if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
                     </a>
                 <?php endif; ?>
 
-                <a href="cart.php" class="icon-link">
+                <a href="cart.php" class="icon-link" aria-label="Open basket">
                     <img src="images/basket.png" alt="Basket" class="nav-icon">
+                    <?php if ($cartCount > 0): ?>
+                        <span class="cart-count-badge"><?php echo $cartCount; ?></span>
+                    <?php endif; ?>
                 </a>
 
-                <div class="icon-link search-icon" id="searchToggle">
-                    <img src="images/search.png" alt="Search" class="nav-icon">
-                </div>
-
                 <!-- DARK MODE TOGGLE -->
-                <button id="themeToggle" class="icon-link" aria-label="Toggle theme">
-                    <span id="themeIcon">🌙</span>
+                <button type="button" id="themeToggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+                    <span id="themeIcon">&#127769;</span>
                 </button>
-            </div>
-
-            <!-- Search bar overlay (hidden until search opens) -->
-            <div id="searchBar" class="search-bar-overlay">
-                <input type="text" placeholder="Search...">
-            </div>
-
-            <!-- Close icon (only visible when search is open) -->
-            <div class="icon-link search-close" id="searchClose">
-                <img src="images/search.png" alt="Close Search" class="nav-icon">
             </div>
         </div>
     </div> <!-- End of NAVBAR -->
@@ -311,49 +315,24 @@ if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
 
     <!-- SCRIPTS -->
     <script>
-    const searchToggle = document.getElementById("searchToggle");
-    const searchClose = document.getElementById("searchClose");
-    const searchBar = document.getElementById("searchBar");
-    const rightDefault = document.getElementById("rightDefault");
-
-    function openSearch() {
-        rightDefault.classList.add("hidden");
-        searchBar.classList.add("active");
-    }
-
-    function closeSearch() {
-        searchBar.classList.remove("active");
-        rightDefault.classList.remove("hidden");
-    }
-
-    searchToggle.addEventListener("click", () => {
-        if (searchBar.classList.contains("active")) {
-            closeSearch();
-        } else {
-            openSearch();
-        }
-    });
-
-    searchClose.addEventListener("click", closeSearch);
-
-    /* DARK MODE */
+    /* DARK MODE (single instance - matches productline.php) */
     const themeToggle = document.getElementById("themeToggle");
-    const themeIcon = document.getElementById("themeIcon");
+    const themeIcon   = document.getElementById("themeIcon");
 
     if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark");
-        themeIcon.textContent = "☀️";
+        themeIcon.innerHTML = "&#9728;&#65039;";
     }
 
-    themeToggle.addEventListener("click", () => {
+    themeToggle.addEventListener("click", function(e) {
+        e.stopPropagation();
         document.body.classList.toggle("dark");
-
         if (document.body.classList.contains("dark")) {
             localStorage.setItem("theme", "dark");
-            themeIcon.textContent = "☀️";
+            themeIcon.innerHTML = "&#9728;&#65039;";
         } else {
             localStorage.setItem("theme", "light");
-            themeIcon.textContent = "🌙";
+            themeIcon.innerHTML = "&#127769;";
         }
     });
 
