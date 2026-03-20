@@ -3,6 +3,11 @@
 
 require_once 'dbconfig.php';
 
+// Ensure session is started (in case dbconfig.php doesn't do it)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php?error=login_required");
     exit();
@@ -17,32 +22,34 @@ if (!isset($_SESSION['cart'])) $_SESSION['cart'] = [];
 $cartCount = count($_SESSION['cart']);
 
 // Cart loader for sidebar
-function loadCartItems(PDO $pdo): array {
-    if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) return [];
-    $items = [];
-    foreach ($_SESSION['cart'] as $raw) {
-        if (!is_array($raw)) continue;
-        $pid = $raw['product_id'] ?? $raw['id'] ?? null;
-        if (!$pid) continue;
-        $size  = $raw['size'] ?? ($raw['variant'] ?? '');
-        $qty   = max(1, (int)($raw['quantity'] ?? 1));
-        $name  = $raw['name']  ?? '';
-        $price = isset($raw['price']) ? (float)$raw['price'] : null;
-        $image = $raw['image'] ?? 'images/placeholder.jpg';
-        if ($price === null || $name === '') {
-            try {
-                $stmt = $pdo->prepare("SELECT name, price FROM Products WHERE product_id = ?");
-                $stmt->execute([$pid]);
-                if ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    if ($name === '')    $name  = $r['name'];
-                    if ($price === null) $price = (float)$r['price'];
-                }
-            } catch (PDOException $e) {}
+if (!function_exists('loadCartItems')) {
+    function loadCartItems(PDO $pdo): array {
+        if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) return [];
+        $items = [];
+        foreach ($_SESSION['cart'] as $raw) {
+            if (!is_array($raw)) continue;
+            $pid = $raw['product_id'] ?? $raw['id'] ?? null;
+            if (!$pid) continue;
+            $size  = $raw['size'] ?? ($raw['variant'] ?? '');
+            $qty   = max(1, (int)($raw['quantity'] ?? 1));
+            $name  = $raw['name']  ?? '';
+            $price = isset($raw['price']) ? (float)$raw['price'] : null;
+            $image = $raw['image'] ?? 'images/placeholder.jpg';
+            if ($price === null || $name === '') {
+                try {
+                    $stmt = $pdo->prepare("SELECT name, price FROM Products WHERE product_id = ?");
+                    $stmt->execute([$pid]);
+                    if ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        if ($name === '')    $name  = $r['name'];
+                        if ($price === null) $price = (float)$r['price'];
+                    }
+                } catch (PDOException $e) {}
+            }
+            if ($price === null) continue;
+            $items[] = ['product_id'=>(int)$pid,'name'=>$name,'size'=>$size,'quantity'=>$qty,'price'=>$price,'subtotal'=>$price*$qty,'image'=>$image];
         }
-        if ($price === null) continue;
-        $items[] = ['product_id'=>(int)$pid,'name'=>$name,'size'=>$size,'quantity'=>$qty,'price'=>$price,'subtotal'=>$price*$qty,'image'=>$image];
+        return $items;
     }
-    return $items;
 }
 
 $cartItems = loadCartItems($pdo);
@@ -70,7 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($checkout['phone'])) $errors[] = "Phone number is required";
 
     if (empty($errors)) {
-        // Keep existing checkout data (address etc.) if set, merge personal data
         $_SESSION['checkout'] = array_merge($_SESSION['checkout'] ?? [], $checkout);
         header("Location: checkout-shipping.php");
         exit();
@@ -252,15 +258,64 @@ footer { background: #111; color: white; padding: 50px 20px 30px; margin-top: 80
     </div>
 </div>
 
-<!-- FOOTER -->
+<!-- FOOTER (matching the rest of the site) -->
 <footer>
-    <div class="footer-grid">
-        <div class="footer-col"><h4>Shop</h4><ul><li><a href="products.php">Men</a></li><li><a href="products.php">Women</a></li><li><a href="products.php">Accessories</a></li><li><a href="products.php">New Arrivals</a></li></ul></div>
-        <div class="footer-col"><h4>Help</h4><ul><li><a href="contact.php">Contact Us</a></li><li><a href="checkout-shipping.php">Shipping Info</a></li><li><a href="#">Returns</a></li><li><a href="#">FAQ</a></li></ul></div>
-        <div class="footer-col"><h4>About</h4><ul><li><a href="about.php">Our Story</a></li><li><a href="#">Sustainability</a></li><li><a href="#">Careers</a></li><li><a href="#">Press</a></li></ul></div>
-        <div class="footer-col"><h4>Connect</h4><div class="social-icons"><i class="ri-instagram-line"></i><i class="ri-facebook-circle-line"></i><i class="ri-twitter-line"></i><i class="ri-tiktok-line"></i></div><p style="margin-top:20px;color:#aaa;font-size:14px;">Student project for university</p></div>
+    <div class="footer-container">
+        <div class="footer-col">
+            <h4>Shop</h4>
+            <ul>
+                <li><a href="productline.php?category=Tops">Tops</a></li>
+                <li><a href="productline.php?category=Bottoms">Bottoms</a></li>
+                <li><a href="productline.php?category=Outerwear">Outerwear</a></li>
+                <li><a href="productline.php?category=Footwear">Footwear</a></li>
+                <li><a href="productline.php?category=Accessories">Accessories</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Customer Service</h4>
+            <ul>
+                <li><a href="contact.php">Delivery &amp; Returns</a></li>
+                <li><a href="login.php">10% Student Discount</a></li>
+                <li><a href="contact.php">FAQs</a></li>
+                <li><a href="login.php">My Account</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Join Now</h4>
+            <ul>
+                <li><a href="create-account.php">Become a member today and get exclusive benefits!</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col footer-col-right">
+            <h4>EveryWear</h4>
+            <p>Designed for all.</p>
+            <p>Follow Us On:</p>
+            <div class="footer-socials">
+                <i class="ri-instagram-line"></i>
+                <i class="ri-tiktok-line"></i>
+                <i class="ri-youtube-line"></i>
+            </div>
+
+            <div class="footer-app">
+                <h5>Download Our App</h5>
+                <div class="store-badges">
+                    <a href="#" aria-label="Get it on Google Play">
+                        <img src="images/image1.png" alt="Get it on Google Play">
+                    </a>
+                    <a href="#" aria-label="Download on the App Store">
+                        <img src="images/image2.png" alt="Download on the App Store">
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="copyright">&copy; 2025 EveryWear. This is a university project.</div>
+
+    <div class="footer-bottom">
+        &copy; 2025 EveryWear. All rights reserved.
+    </div>
 </footer>
 </body>
 </html>
