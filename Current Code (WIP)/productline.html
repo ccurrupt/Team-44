@@ -804,38 +804,6 @@
       transform: translateY(-1px);
     }
 
-    #backToTop {
-      position: fixed;
-      right: 24px;
-      bottom: 24px;
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      border: none;
-      background: black;
-      color: white;
-      font-size: 22px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
-      opacity: 0;
-      transform: translateY(8px);
-      pointer-events: none;
-      transition: opacity 0.18s ease, transform 0.18s ease;
-      z-index: 40;
-    }
-
-    #backToTop.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    #backToTop:hover {
-      background: black;
-    }
 
     footer {
       background: #111827;
@@ -1119,14 +1087,17 @@
       <div class="right-default" id="rightDefault">
         <a href="Login.html" class="login-btn">Log in</a>
         <a href="create-account.html" class="create-btn">
-            <i class="ri-account-circle-fill"></i>
-            Create Account
+          <img src="images/account.png" alt="" class="btn-icon">
+          Create Account
         </a>
 
         <div id="cart-icon" class="icon-link" aria-label="Open basket">
           <img src="images/basket.png" alt="Basket" class="nav-icon">
           <span class="cart-item-count"></span>
         </div>
+        <div class="icon-link">
+                <img src="images/search.png" alt="Search" class="nav-icon">
+            </div>
       </div>
     </div>
   </div>
@@ -1327,7 +1298,6 @@
     </div>
   </footer>
 
-  <button id="backToTop" aria-label="Back to top">↑</button>
 
   <script>
     
