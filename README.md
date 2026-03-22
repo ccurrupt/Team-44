@@ -1,4 +1,4 @@
-#EveryWear
+# EveryWear
 
 ![EveryWear Logo](images/logo.png)
 
