@@ -21,6 +21,7 @@ switch ($_GET['error'] ?? '') {
 <head>
 <meta charset="UTF-8">
 <title>EveryWear – Login</title>
+<link rel="icon" type="image/png" href="images/logo.png">
 <link
     href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css"
     rel="stylesheet"
