@@ -4,14 +4,13 @@ An e-commerce clothing website built as a university group project.
 
 ## Description
 EveryWear is designed as a fully functional online clothing store, demonstrating the integration of frontend, backend, and database systems. Users can: <br>
-
-Browse products by category
-View product details
-Create and manage accounts
-Add items to a shopping cart
-Place orders
-View order history
-Contact support via a form
+Browse products by category <br>
+View product details <br>
+Create and manage accounts <br>
+Add items to a shopping cart <br>
+Place orders <br>
+View order history <br>
+Contact support via a form <br>
 
 ## Features
 Browsing Products:
