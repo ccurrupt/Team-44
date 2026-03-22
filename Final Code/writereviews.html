@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EveryWear Reviews</title>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #e4ecf3);
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 30px;
+}
+
+.card {
+    background: #fff;
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.subtitle {
+    text-align: center;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+label {
+    display: block;
+    margin-top: 18px;
+    font-weight: 500;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-top: 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+input:focus, textarea:focus {
+    border-color: #30CDF5;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(48,205,245,0.15);
+}
+
+.rating-select {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.star {
+    font-size: 22px;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.2s;
+}
+
+.star.active {
+    color: #f5b50a;
+}
+
+button {
+    margin-top: 25px;
+    padding: 14px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #30CDF5, #00FAA0);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.reviews {
+    margin-top: 40px;
+}
+
+.review-card {
+    padding: 18px;
+    border-radius: 12px;
+    background: #f9fbfd;
+    margin-bottom: 15px;
+    border: 1px solid #eef2f6;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.review-name {
+    font-weight: 600;
+}
+
+.review-stars {
+    color: #f5b50a;
+}
+
+.review-text {
+    margin-top: 8px;
+    color: #555;
+}
+
+.empty {
+    text-align: center;
+    color: #aaa;
+    margin-top: 20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="card">
+        <h1>EveryWear Reviews</h1>
+        <p class="subtitle">Tell us what you think about your purchase.</p>
+
+        <form id="reviewForm">
+            <label>Your Name</label>
+            <input type="text" id="name" placeholder="John Doe" required>
+
+            <label>Rating</label>
+            <div class="rating-select" id="stars">
+                <i class="ri-star-fill star" data-value="1"></i>
+                <i class="ri-star-fill star" data-value="2"></i>
+                <i class="ri-star-fill star" data-value="3"></i>
+                <i class="ri-star-fill star" data-value="4"></i>
+                <i class="ri-star-fill star" data-value="5"></i>
+            </div>
+
+            <label>Your Review</label>
+            <textarea id="review" rows="4" placeholder="Write your review..." required></textarea>
+
+            <button type="submit">Submit Review</button>
+        </form>
+    </div>
+</div>
+
+<script>
+let selectedRating = 0;
+const stars = document.querySelectorAll(".star");
+const form = document.getElementById("reviewForm");
+const list = document.getElementById("reviewsList");
+
+let reviews = [];
+
+stars.forEach(star => {
+    star.addEventListener("click", () => {
+        selectedRating = star.dataset.value;
+        updateStars();
+    });
+});
+
+function updateStars() {
+    stars.forEach(star => {
+        star.classList.toggle("active", star.dataset.value <= selectedRating);
+    });
+}
+
+function renderReviews() {
+    list.innerHTML = "";
+
+    reviews.slice().reverse().forEach(r => {
+        const div = document.createElement("div");
+        div.classList.add("review-card");
+
+        div.innerHTML = `
+            <div class="review-header">
+                <span class="review-name">${r.name}</span>
+                <span class="review-stars">${"★".repeat(r.rating)}</span>
+            </div>
+            <div class="review-text">${r.text}</div>
+        `;
+
+        list.appendChild(div);
+    });
+}
+
+form.addEventListener("submit", e => {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const text = document.getElementById("review").value.trim();
+
+    if (!name || !text || selectedRating === 0) {
+        alert("Please complete all fields");
+        return;
+    }
+
+    reviews.push({ name, rating: selectedRating, text });
+    renderReviews();
+    form.reset();
+    selectedRating = 0;
+    updateStars();
+});
+
+renderReviews();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EveryWear - Reviews</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css"
+    rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+    /* Reviews page specific styles */
+    textarea {
+        width: 100%;
+        padding: 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        margin-top: 5px;
+        font-family: inherit;
+    }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP NAVIGATION -->
+    <div class="navbar">
+
+        <!-- LOGO -->
+        <div class="logo-section">
+            <a href="EveryWear Homepage.html" class="logo-link" aria-label="Go to homepage">
+                <img src="images/logo.png" loading="eager" alt="EveryWear Logo" width="120" height="90" class="site-logo">
+            </a>
+        </div>
+
+        <!-- NAV BUTTONS -->
+        <div class="nav-buttons">
+            <a href="About Us.html" class="nav-button">About Us</a>
+            <a href="productline.html" class="nav-button">Products</a>
+            <a href="Reviews.html" class="nav-button active">Reviews</a>
+            <a href="Contact Us.html" class="nav-button">Contact Us</a>
+        </div>
+
+        <!-- RIGHT SIDE: Login / Create Account / Basket / Search -->
+        <div class="right-controls" id="rightControls">
+
+
+            <!-- Default icons (visible normally) -->
+            <div class="right-default" id="rightDefault">
+                <a href="Login.html" class="login-btn">Log in</a>
+                <a href="create-account.html" class="create-btn">Create Account</a>
+
+                <a href="Basket.html" class="icon-link">
+                    <img src="images/basket.png" alt="Basket" class="nav-icon">
+                </a>
+
+                <div class="icon-link search-icon" id="searchToggle">
+                    <img src="images/search.png" alt="Search" class="nav-icon">
+                </div>
+            </div>
+
+            <!-- Search bar overlay (hidden until search opens) -->
+            <div id="searchBar" class="search-bar-overlay">
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <!-- Close icon (only visible when search is open) -->
+            <div class="icon-link search-close" id="searchClose">
+                <img src="images/search.png" alt="Close Search" class="nav-icon">
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="hero">
+    <div style="text-align:center; max-width: 800px;">
+
+        <!-- REVIEW FORM -->
+        <div style="margin-top: 30px; text-align:left;">
+            <h2 style="text-align:center;">Leave a Review</h2>
+            <form id="reviewForm">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" placeholder="John Doe" required>
+
+                <label for="rating">Rating (1-5)</label>
+                <input type="number" id="rating" min="1" max="5" placeholder="5" required>
+
+                <label for="review">Your Review</label>
+                <textarea id="review" rows="4" placeholder="Write your review here..." required style="width:100%; padding:12px; border-radius:6px; border:1px solid #ccc; margin-top:5px;"></textarea>
+
+                <button type="submit" class="btn">Submit Review</button>
+            </form>
+        </div>
+
+        <!-- REVIEWS LIST -->
+        <div id="reviewsList" style="margin-top: 40px; text-align:left;">
+            <!-- Preloaded reviews will appear here -->
+            </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-container">
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+            <li><a href="productline.html?category=Tops">Tops</a></li>
+            <li><a href="productline.html?category=Bottoms">Bottoms</a></li>
+            <li><a href="productline.html?category=Outerwear">Outerwear</a></li>
+            <li><a href="productline.html?category=Footwear">Footwear</a></li>
+            <li><a href="productline.html?category=Accessories">Accessories</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Customer Service</h4>
+        <ul>
+          <li><a href="Contact Us.html">Delivery & Returns</a></li>
+          <li><a href="login.html">10% Student Discount</a></li>
+          <li><a href="Contact Us.html">FAQs</a></li>
+          <li><a href="login.html">My Account</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Join Now</h4>
+        <ul>
+          <li><a href="membership.html">Become a member today and get exclusive benefits!</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-right">
+        <h4>EveryWear</h4>
+        <p>Designed for all.</p>
+        <p>Follow Us On:</p>
+        <div class="footer-socials">
+          <i class="ri-instagram-line"></i>
+          <i class="ri-tiktok-line"></i>
+          <i class="ri-youtube-line"></i>
+        </div>
+
+        <div class="footer-app">
+          <h5>Download Our App</h5>
+          <div class="store-badges">
+            <a href="#" aria-label="Get it on Google Play">
+              <img src="images/image1.png" alt="Get it on Google Play">
+            </a>
+            <a href="#" aria-label="Download on the App Store">
+              <img src="images/image2.png" alt="Download on the App Store">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2025 EveryWear. All rights reserved.
+    </div>
+  </footer>
+
+    <script>
+    const searchToggle = document.getElementById("searchToggle");
+    const searchClose = document.getElementById("searchClose");
+    const searchBar = document.getElementById("searchBar");
+    const rightDefault = document.getElementById("rightDefault");
+
+    function openSearch() {
+        rightDefault.classList.add("hidden");
+        searchBar.classList.add("active");
+    }
+
+    function closeSearch() {
+        searchBar.classList.remove("active");
+        rightDefault.classList.remove("hidden");
+    }
+
+    searchToggle.addEventListener("click", () => {
+        if (searchBar.classList.contains("active")) {
+            closeSearch();
+        } else {
+            openSearch();
+        }
+    });
+
+    searchClose.addEventListener("click", closeSearch);
+
+    const reviewForm = document.getElementById("reviewForm");
+    const reviewsList = document.getElementById("reviewsList");
+
+    reviewForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const rating = parseInt(document.getElementById("rating").value);
+        const reviewText = document.getElementById("review").value.trim();
+
+        if (!name || !rating || !reviewText) return;
+
+        // Create review card
+        const reviewCard = document.createElement("div");
+        reviewCard.style.borderTop = "1px solid #eee";
+        reviewCard.style.padding = "10px 0";
+
+        reviewCard.innerHTML = `
+            <p><strong>${name}</strong> <span style="color: #f5b50a;">${"★".repeat(rating)}${"☆".repeat(5-rating)}</span></p>
+            <p style="margin-top:5px;">${reviewText}</p>
+        `;
+
+        // Add to reviews list
+        if (reviewsList.querySelector("p") && reviewsList.querySelector("p").textContent.includes("No reviews")) {
+            reviewsList.innerHTML = "";
+        }
+
+        reviewsList.prepend(reviewCard);
+
+        // Reset form
+        reviewForm.reset();
+    });
+
+    let reviews = [
+    { name: "klbc1997", rating: 5,
+    text: "I really love this website! The colour scheme is calm and modern, which makes browsing feel enjoyable. It’s easy to navigate and I especially appreciate how many of the products are sustainable — it makes shopping feel more responsible.",
+    helpful: 22 },
+    {name: "Sara1234", rating: 3, 
+    text: "The website looks beautiful and the layout is clean, but sometimes pages take a little while to load on my phone. I do like how clearly the sustainability information is displayed though — it helps me make better choices.",
+    helpful: 5 },
+    {name: "NITA1111", rating: 5, text: "Such a smooth shopping experience! The website is visually appealing and simple to use, and I love that sustainability is clearly part of the brand’s values. Makes me want to keep coming back.", helpful: 0 },
+    {name: "kristinat153_6573", rating: 5, text: "Such a user-friendly website! The product pages are detailed with clear images and helpful descriptions. I also love how consistent the branding is across every page — it feels polished and trustworthy.", 
+    helpful: 25 }
+];
+
+function renderReviews() {
+    const reviewsList = document.getElementById("reviewsList");
+    reviewsList.innerHTML = "";
+
+    if(reviews.length === 0){
+        reviewsList.innerHTML = '<p style="color: #999;">No reviews yet. Be the first to leave a review!</p>';
+        return;
+    }
+
+    reviews.forEach((r, index) => {
+        const reviewCard = document.createElement("div");
+        reviewCard.style.borderTop = "1px solid #eee";
+        reviewCard.style.padding = "10px 0";
+
+        reviewCard.innerHTML = `
+            <p><strong>${r.name}</strong> 
+            <span style="color: #f5b50a;">${"★".repeat(r.rating)}${"☆".repeat(5-r.rating)}</span></p>
+            <p style="margin-top:5px;">${r.text}</p>
+            <button class="btn" onclick="markHelpful(${index})">Helpful (${r.helpful})</button>
+        `;
+        reviewsList.appendChild(reviewCard);
+    });
+}
+
+function markHelpful(index){
+    reviews[index].helpful++;
+    renderReviews();
+}
+
+// Handle form submission
+document.getElementById("reviewForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const rating = parseInt(document.getElementById("rating").value);
+    const text = document.getElementById("review").value.trim();
+
+    if(!name || !rating || !text) return;
+
+    reviews.push({ name, rating, text, helpful: 0 });
+    renderReviews();
+    this.reset();
+});
+
+// Show preloaded reviews on page load
+renderReviews();
+    
+    </script>
+</body>
+</html>
