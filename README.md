@@ -1,4 +1,4 @@
-# EveryWear
+![EveryWear Logo](images/logo.png)
 
 An e-commerce clothing website built as a university group project.
 
