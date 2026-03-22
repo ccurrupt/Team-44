@@ -2,13 +2,11 @@
 
 ![EveryWear Logo](images/logo.png)
 
-An e-commerce clothing website built as a university group project.
-
 ## Website Link
 Click [here](https://cs2team44.cs2410-web01pvm.aston.ac.uk/) to view the website.
 
 ## Description
-EveryWear is designed as a fully functional online clothing store, demonstrating the integration of frontend, backend, and database systems. <br>
+EveryWear is designed as a fully functional e-commerce clothing store, demonstrating the integration of frontend, backend, and database systems. <br>
 ### Users can:
 - Browse products by category
 - View product details
