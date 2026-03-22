@@ -116,16 +116,16 @@ Fill in your name, email, and message <br>
 Submit the form to send your inquiry <br>
 
 ## Error Handling & Tips
-**Invalid Login:** Shows an error if credentials don’t match
-**Empty Cart:** Checkout is disabled if the cart has no items
-**Database Errors:** Ensure .env is correctly configured; errors will appear in PHP logs
+**Invalid Login:** Shows an error if credentials don’t match <br>
+**Empty Cart:** Checkout is disabled if the cart has no items <br>
+**Database Errors:** Ensure .env is correctly configured; errors will appear in PHP logs <br>
 
 ## Contributing
 Fork the repository <br>
 Create a new branch (git checkout -b feature/YourFeature) <br>
 Commit your changes (git commit -m 'Add some feature') <br>
 Push to the branch (git push origin feature/YourFeature) <br>
-Open a Pull Request
+Open a Pull Request <br>
 
 ## Notes
 
@@ -134,10 +134,10 @@ Open a Pull Request
 
 ## Team Members
 ### Frontend
-Shihad Hussain 240133588
-Jaimin Nish 240389923
-Maryam Khan Yaqoob 240153760
-Sukanya Badoghu 240324810
+Shihad Hussain 240133588 <br>
+Jaimin Nish 240389923 <br>
+Maryam Khan Yaqoob 240153760 <br>
+Sukanya Badoghu 240324810 <br>
 ### Backend
-Omarion Cohen 230112438
-Ammar Salem 230145090
+Omarion Cohen 230112438 <br>
+Ammar Salem 230145090 <br>
