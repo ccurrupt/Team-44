@@ -19,22 +19,28 @@ EveryWear is designed as a fully functional online clothing store, demonstrating
 - Contact support via a form
 
 ## Features
-**Browsing Products:** Click on the different items like top, bottom to view all available products on the website <br>
+### **Browsing Products:** 
+Click on the different items like top, bottom to view all available products on the website <br>
 Search by category or product name (future enhancement) <br>
 See product details such as price, description, and availability <br>
-**Account Management:** Signup: Users can create an account with email, username, and password <br>
+### **Account Management:**
+Signup: Users can create an account with email, username, and password <br>
 Login/Logout: Secure login system with session handling <br>
 Profile: View personal account information (currently basic functionality) <br>
-**Shopping Cart:** Add or remove products from the cart <br>
+### **Shopping Cart:**
+Add or remove products from the cart <br>
 View total price and quantity of selected items <br>
 Update quantities before checkout <br>
-**Checkout & Orders:** Place orders using the shopping cart <br>
+### **Checkout & Orders:**
+Place orders using the shopping cart <br>
 Orders are stored in the database for tracking <br>
 View past orders in orders.php <br>
 Each order shows items, quantity, total price, and order date <br>
-**Contact Form:** Users can send inquiries or feedback through a simple form <br>
+### **Contact Form:**
+Users can send inquiries or feedback through a simple form <br>
 Submissions are sent to the database for review (or email in a real implementation) <br>
-**Responsive Design:** Works on desktop and mobile devices <br>
+### **Responsive Design:**
+Works on desktop and mobile devices <br>
 Pages adjust layout to fit different screen sizes <br>
 
 ## Tech Stack
