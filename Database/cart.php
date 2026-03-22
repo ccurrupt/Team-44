@@ -110,7 +110,7 @@ foreach ($_SESSION['cart'] as $raw) {
     <meta charset="UTF-8">
     <title>Your Cart - EveryWear</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="images/logo.png">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet"/>
     <style>
         body {
@@ -202,7 +202,7 @@ foreach ($_SESSION['cart'] as $raw) {
 </head>
 <body>
 
-<body>
+
   <!-- TOP NAVIGATION -->
     <div class="navbar">
 
@@ -267,7 +267,7 @@ foreach ($_SESSION['cart'] as $raw) {
     <?php if (empty($cartItems)): ?>
         <div class="empty-cart">
             <p>Your cart is currently empty.</p>
-            <a href="products.php" class="continue-shopping">Continue Shopping</a>
+            <a href="productline.php" class="continue-shopping">Continue Shopping</a>
         </div>
 
     <?php else: ?>
