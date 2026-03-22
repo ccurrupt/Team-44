@@ -512,10 +512,10 @@ foreach ($_SESSION['cart'] as $item) {
     </footer>
 
     <!-- Back to top -->
-    <button id="backToTop" aria-label="Back to top">↑</button>
+    <button id="backToTop" aria-label="Back to top">?</button>
 
     <script>
-    // ── Cart sidebar open/close ──
+    // ?? Cart sidebar open/close ??
     const cartToggle  = document.getElementById('cartToggle');
     const cartSidebar = document.getElementById('cartSidebar');
     const cartOverlay = document.getElementById('cartOverlay');
@@ -544,7 +544,7 @@ foreach ($_SESSION['cart'] as $item) {
         }
     });
 
-    // ── DARK MODE (matching productline.php) ──
+    // ?? DARK MODE (matching productline.php) ??
     const themeToggle = document.getElementById("themeToggle");
     const themeIcon   = document.getElementById("themeIcon");
 
@@ -565,7 +565,7 @@ foreach ($_SESSION['cart'] as $item) {
         }
     });
 
-    // ── Back to top ──
+    // ?? Back to top ??
     const backToTopBtn = document.getElementById("backToTop");
 
     window.addEventListener("scroll", function() {
