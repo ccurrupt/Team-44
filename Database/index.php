@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EveryWear</title>
+<link rel="icon" type="image/png" href="images/logo.png">
 
     <!-- Inline styles removed; all styles are now centrally defined in style.css -->
     <link rel="stylesheet" href="style.css">
@@ -96,12 +97,12 @@
             <p class="search-heading">What are you looking for?</p>
         </div>
         <div class="hero-buttons">
-            <a href="productline.php?category=Outerwear" class="category-btn">Outerwear</a>
-            <a href="productline.php?category=Tops" class="category-btn">Tops</a>
-            <a href="productline.php?category=Bottoms" class="category-btn">Bottoms</a>
-            <a href="productline.php?category=Footwear" class="category-btn">Footwear</a>
-            <a href="productline.php?category=Accessories" class="category-btn">Accessories</a>
-        </div>
+    <button class="category-btn" data-category="Outerwear">Outerwear</button>
+    <button class="category-btn" data-category="Tops">Tops</button>
+    <button class="category-btn" data-category="Bottoms">Bottoms</button>
+    <button class="category-btn" data-category="Footwear">Footwear</button>
+    <button class="category-btn" data-category="Accessories">Accessories</button>
+</div>
         <div>
             <h2>Why YOU should shop with us:</h2>
         </div>
@@ -207,6 +208,14 @@ searchToggle.addEventListener("click", () => {
 });
 
 searchClose.addEventListener("click", closeSearch);
+
+document.querySelectorAll('.category-btn[data-category]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Redirect to productline.php with a category param that matches the menu code
+        const category = btn.getAttribute('data-category');
+        window.location.href = 'productline.php?category=' + encodeURIComponent(category);
+    });
+});
 
 /* DARK MODE */
 const themeToggle = document.getElementById("themeToggle");
