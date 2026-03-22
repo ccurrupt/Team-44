@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Reports</title>
+
+<style>
+/* Global Styles */
+body {
+    margin: 0;
+    background: #f6f8fb;
+    font-family: "Inter", sans-serif;
+    color: #1f2937;
+}
+
+h1, h2, h3 {
+    margin: 0;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    padding: 12px 0;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-buttons a.nav-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 20px;
+    border-radius: 7px;
+    background: #e7e9eb;
+    color: black;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.nav-buttons a.nav-button.active {
+    background: #e7e9eb;
+    color: black;
+}
+
+.nav-buttons a.nav-button:hover {
+    background: linear-gradient(to right, #30CDF5, #00FAA0);
+    color: black;
+    transform: translateY(-2px) scale(1.05);
+}
+
+/* Page Header */
+.page-header {
+    max-width: 1200px;
+    margin: 30px auto 10px auto;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #111827;
+}
+
+/* Reports Container */
+.reports-container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 20px auto 60px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+/* Card Style */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* Chart Boxes */
+.chart-box h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+/* Canvas */
+canvas {
+    background: #f7f8fa;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+/* Tables */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+th {
+    background: #1f2937;
+    color: white;
+    font-weight: 600;
+}
+
+td {
+    color: #374151;
+}
+
+.low-stock, .top-selling {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #f7f8fa;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.low-stock h4, .top-selling h4 {
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.low-stock ul, .top-selling ol {
+    padding-left: 20px;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .nav-buttons {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="nav-buttons">
+        <a href="admin.html" class="nav-button active">Dashboard</a>
+        <a href="inventory.html" class="nav-button">Inventory</a>
+        <a href="cutomermanag.html" class="nav-button">Customers</a>
+        <a href="report.html" class="nav-button">Reports</a>
+    </div>
+</header>
+
+<div class="page-header">
+    <h1>Admin Reports</h1>
+</div>
+
+<div class="reports-container">
+    <!-- Orders Status Card -->
+    <div class="card chart-box">
+        <h3>Orders Status</h3>
+        <canvas id="ordersChart"></canvas>
+    </div>
+
+    <!-- Stock Levels Card -->
+    <div class="card chart-box">
+        <h3>Stock Levels</h3>
+        <canvas id="stockChart"></canvas>
+        <div class="low-stock">
+            <h4>Low Stock Products</h4>
+            <ul>
+                <li style="color:#ff0000;">Crocs – Out of Stock</li>
+                <li style="color:#f59e0b;">Jumper – Only 5 left</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Sales by Product Card -->
+    <div class="card chart-box">
+        <h3>Sales by Product</h3>
+        <canvas id="salesChart"></canvas>
+        <div class="top-selling">
+            <h4>Top Selling Products</h4>
+            <ol>
+                <li> T-Shirt – 50 units sold</li>
+                <li> Sandals – 30 units sold</li>
+                <li> Crocs – 20 units sold</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Optional Table Card -->
+    <div class="card table-container">
+        <h3>All Products Table</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Stock Quantity</th>
+                    <th>Units Sold</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Sandals</td><td>20</td><td>30</td></tr>
+                <tr><td>Jumper</td><td>5</td><td>12</td></tr>
+                <tr><td>Crocs</td><td>0</td><td>20</td></tr>
+                <tr><td>T-Shirt</td><td>15</td><td>50</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Sample data - this can later be connected to real database
+const ordersData = [
+    { status: "Pending", count: 5 },
+    { status: "Processing", count: 8 },
+    { status: "Shipped", count: 12 },
+    { status: "Completed", count: 20 }
+];
+
+const stockData = [
+    { name: "Sandals", stock: 20 },
+    { name: "Jumper", stock: 5 },
+    { name: "Crocs", stock: 0 },
+    { name: "T-Shirt", stock: 15 }
+];
+
+const salesData = [
+    { name: "Sandals", sold: 30 },
+    { name: "Jumper", sold: 12 },
+    { name: "Crocs", sold: 20 },
+    { name: "T-Shirt", sold: 50 }
+];
+
+// ===== Orders Status Pie Chart =====
+const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+const ordersChart = new Chart(ordersCtx, {
+    type: 'pie',
+    data: {
+        labels: ordersData.map(o => o.status),
+        datasets: [{
+            label: 'Orders Status',
+            data: ordersData.map(o => o.count),
+            backgroundColor: ['#ef4444', '#f59e0b', '#10b981', '#6366f1']
+        }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+});
+
+// ===== Stock Levels Bar Chart =====
+const stockCtx = document.getElementById('stockChart').getContext('2d');
+const stockChart = new Chart(stockCtx, {
+    type: 'bar',
+    data: {
+        labels: stockData.map(p => p.name),
+        datasets: [{
+            label: 'Stock Quantity',
+            data: stockData.map(p => p.stock),
+            backgroundColor: stockData.map(p => 
+                p.stock === 0 ? '#ef4444' : (p.stock <=5 ? '#f59e0b' : '#10b981')
+            )
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+// ===== Sales by Product Line Chart =====
+const salesCtx = document.getElementById('salesChart').getContext('2d');
+const salesChart = new Chart(salesCtx, {
+    type: 'line',
+    data: {
+        labels: salesData.map(p => p.name),
+        datasets: [{
+            label: 'Units Sold',
+            data: salesData.map(p => p.sold),
+            borderColor: '#4b74ff',
+            backgroundColor: 'rgba(75,116,255,0.2)',
+            tension: 0.3,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+</script>
+</body>
+</html>
