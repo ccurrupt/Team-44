@@ -13,29 +13,23 @@ View order history <br>
 Contact support via a form <br>
 
 ## Features
-Browsing Products:
-Click on the different items like top, bottom to view all available products on the website
-Search by category or product name (future enhancement)
-See product details such as price, description, and availability
-Account Management:
-Signup: Users can create an account with email, username, and password
-Login/Logout: Secure login system with session handling
-Profile: View personal account information (currently basic functionality)
-Shopping Cart:
-Add or remove products from the cart
-View total price and quantity of selected items
-Update quantities before checkout
-Checkout & Orders:
-Place orders using the shopping cart
-Orders are stored in the database for tracking
-View past orders in orders.php
-Each order shows items, quantity, total price, and order date
-Contact Form:
-Users can send inquiries or feedback through a simple form
-Submissions are sent to the database for review (or email in a real implementation)
-Responsive Design:
-Works on desktop and mobile devices
-Pages adjust layout to fit different screen sizes
+**Browsing Products:** Click on the different items like top, bottom to view all available products on the website <br>
+Search by category or product name (future enhancement) <br>
+See product details such as price, description, and availability <br>
+**Account Management:** Signup: Users can create an account with email, username, and password <br>
+Login/Logout: Secure login system with session handling <br>
+Profile: View personal account information (currently basic functionality) <br>
+**Shopping Cart:** Add or remove products from the cart <br>
+View total price and quantity of selected items <br>
+Update quantities before checkout <br>
+**Checkout & Orders:** Place orders using the shopping cart <br>
+Orders are stored in the database for tracking <br>
+View past orders in orders.php <br>
+Each order shows items, quantity, total price, and order date <br>
+**Contact Form:** Users can send inquiries or feedback through a simple form <br>
+Submissions are sent to the database for review (or email in a real implementation) <br>
+**Responsive Design:** Works on desktop and mobile devices <br>
+Pages adjust layout to fit different screen sizes <br>
 
 ## Tech Stack
 
@@ -96,36 +90,36 @@ Team-44/
 └── README.md               # This file
 ```
 ## Usage Guide
-Browsing & Selecting Products:
-Open index.php to see all products.
-Click on a product to view details.
-Click Add to Cart to save it for checkout.
-Managing Your Account:
-Signup: Navigate to create-account.php, fill out the form, and submit.
-Login: Navigate to login.php, enter credentials, and submit.
-Logout: Use the logout link to safely end your session.
-Using the Cart:
-View the cart at cart.php.
-Adjust quantities or remove items as needed.
-Click Checkout to proceed to order placement.
-Placing Orders:
-After checkout, your order is saved in the database.
-Access orders.php to see your order history and details.
-Contact Form:
-Navigate to Contact Us.html
-Fill in your name, email, and message
-Submit the form to send your inquiry
+**Browsing & Selecting Products:** 
+Open index.php to see all products. <br>
+Click on a product to view details. <br>
+Click Add to Cart to save it for checkout. <br>
+**Managing Your Account:**
+Signup: Navigate to create-account.php, fill out the form, and submit. <br>
+Login: Navigate to login.php, enter credentials, and submit. <br>
+Logout: Use the logout link to safely end your session. <br>
+**Using the Cart:**
+View the cart at cart.php. <br>
+Adjust quantities or remove items as needed. <br>
+Click Checkout to proceed to order placement. <br>
+**Placing Orders:**
+After checkout, your order is saved in the database. <br>
+Access orders.php to see your order history and details. <br>
+**Contact Form:**
+Navigate to Contact Us.html <br>
+Fill in your name, email, and message <br>
+Submit the form to send your inquiry <br>
 
 ## Error Handling & Tips
-Invalid Login: Shows an error if credentials don’t match
-Empty Cart: Checkout is disabled if the cart has no items
-Database Errors: Ensure .env is correctly configured; errors will appear in PHP logs
+**Invalid Login:** Shows an error if credentials don’t match
+**Empty Cart:** Checkout is disabled if the cart has no items
+**Database Errors:** Ensure .env is correctly configured; errors will appear in PHP logs
 
 ## Contributing
-Fork the repository
-Create a new branch (git checkout -b feature/YourFeature)
-Commit your changes (git commit -m 'Add some feature')
-Push to the branch (git push origin feature/YourFeature)
+Fork the repository <br>
+Create a new branch (git checkout -b feature/YourFeature) <br>
+Commit your changes (git commit -m 'Add some feature') <br>
+Push to the branch (git push origin feature/YourFeature) <br>
 Open a Pull Request
 
 ## Notes
