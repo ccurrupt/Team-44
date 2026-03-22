@@ -131,3 +131,13 @@ Open a Pull Request
 
 - Never commit a real `.env` file. Use `.env.example` as a template only.
 - This is a student project for university purposes.
+
+## Team Members
+### Frontend
+Shihad Hussain 240133588
+Jaimin Nish 240389923
+Maryam Khan Yaqoob 240153760
+Sukanya Badoghu 240324810
+### Backend
+Omarion Cohen 230112438
+Ammar Salem 230145090
