@@ -76,6 +76,7 @@ foreach ($_SESSION['cart'] as $item) {
   <meta charset="UTF-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>EveryWear</title>
+<link rel="icon" type="image/png" href="images/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css"
         rel="stylesheet"/>
@@ -1414,7 +1415,7 @@ foreach ($_SESSION['cart'] as $item) {
             <button type="button" class="sort-toggle" id="sortToggle">
               <span class="sort-label">Sort by :</span>
               <span class="sort-value" id="sortCurrent">Recommended</span>
-              <span class="sort-chevron">?</span>
+              
             </button>
             <div class="sort-menu" id="sortMenu">
               <button class="sort-option is-active" data-sort="recommended">Recommended</button>
@@ -1984,6 +1985,28 @@ foreach ($_SESSION['cart'] as $item) {
         };
       });
     }
+    
+    
+    // --- Set initial filter based on the URL (for deep linking and correct redirect from homepage) ---
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlCategory = urlParams.get('category');
+    if (urlCategory) {
+        activeCategory = urlCategory;
+        activeType = "";
+        // Optional: remove any search from previous sessions
+        searchQuery = "";
+        if (searchInput) searchInput.value = "";
+        updateBreadcrumb();
+        applyFilters(true);
+        // Optionally: highlight the right menu, if you want
+        if (menuGroups.length) {
+            menuGroups.forEach(b => b.classList.toggle("active", b.dataset.filterGroup === urlCategory));
+        }
+    }
+});
+    
+    
     
         // Auto-open cart if redirected after cart action
     const urlParams = new URLSearchParams(window.location.search);
