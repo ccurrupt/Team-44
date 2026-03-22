@@ -102,22 +102,22 @@ Team-44/
 └── README.md               # This file
 ```
 ## Usage Guide
-**Browsing & Selecting Products:** 
+### **Browsing & Selecting Products:** 
 Open index.php to see all products. <br>
 Click on a product to view details. <br>
 Click Add to Cart to save it for checkout. <br>
-**Managing Your Account:**
+### **Managing Your Account:**
 Signup: Navigate to create-account.php, fill out the form, and submit. <br>
 Login: Navigate to login.php, enter credentials, and submit. <br>
 Logout: Use the logout link to safely end your session. <br>
-**Using the Cart:**
+### **Using the Cart:**
 View the cart at cart.php. <br>
 Adjust quantities or remove items as needed. <br>
 Click Checkout to proceed to order placement. <br>
-**Placing Orders:**
+### **Placing Orders:**
 After checkout, your order is saved in the database. <br>
 Access orders.php to see your order history and details. <br>
-**Contact Form:**
+### **Contact Form:**
 Navigate to Contact Us.html <br>
 Fill in your name, email, and message <br>
 Submit the form to send your inquiry <br>
@@ -141,10 +141,10 @@ Open a Pull Request <br>
 
 ## Team Members
 ### Frontend
-Shihad Hussain 240133588 <br>
-Jaimin Nish 240389923 <br>
-Maryam Khan Yaqoob 240153760 <br>
-Sukanya Badoghu 240324810 <br>
+- Shihad Hussain (240133588)
+- Jaimin Nish (240389923)
+- Maryam Khan Yaqoob (240153760)
+- Sukanya Badoghu (240324810)
 ### Backend
-Omarion Cohen 230112438 <br>
-Ammar Salem 230145090 <br>
+- Omarion Cohen (230112438)
+- Ammar Salem (230145090)
