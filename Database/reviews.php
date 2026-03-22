@@ -16,7 +16,7 @@ $cartCount = count($_SESSION['cart']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EveryWear - Reviews</title>
-
+<link rel="icon" type="image/png" href="images/logo.png">
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet"/>
 
