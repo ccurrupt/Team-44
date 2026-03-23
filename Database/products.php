@@ -119,7 +119,7 @@ if (!empty($category)) {
   <meta charset="UTF-8" />
   <title>EveryWear - Products</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="icon" type="image/png" href="logo.png">
+	<link rel="icon" type="image/png" href="images/logo.png">
 	<link rel="stylesheet" href="style.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet"/>
   <style>
@@ -550,41 +550,66 @@ if (!empty($category)) {
 </head>
 
 <body> 
-  <!-- NAVBAR  -->
+  
+  <!-- TOP NAVIGATION -->
     <div class="navbar">
-    <div class="logo-section">
-      <a href="index.php" class="logo-link">
-        <img src="logo.png" alt="EveryWear Logo" class="site-logo">
-      </a>
-    </div>
 
-    <div class="nav-buttons">
-      <a href="index.php"    class="nav-button">Home</a>
-      <a href="about.php"    class="nav-button">About Us</a>
-      <a href="products.php" class="nav-button active">Products</a>
-      <a href="reviews.php"  class="nav-button">Reviews</a>
-      <a href="orders.php"   class="nav-button">Orders</a>
-    </div>
+        <!-- LOGO -->
+        <div class="logo-section">
+            <a href="index.php" class="logo-link" aria-label="Go to homepage">
+                <img src="images/logo.png" loading="eager" alt="EveryWear Logo" width="120" height="90" class="site-logo">
+            </a>
+        </div>
 
-    <div class="right-controls">
-      <div class="right-default">
-        <?php if ($isLoggedIn): ?>
-          <span class="welcome-msg">Welcome, <?php echo htmlspecialchars($userName); ?>!</span>
-          <a href="logout.php" class="logout-btn">Logout</a>
-        <?php else: ?>
-          <a href="login.php" class="login-btn">Log in</a>
-          <a href="create-account.php" class="create-btn">Create Account</a>
-        <?php endif; ?>
+        <!-- NAV BUTTONS -->
+        <div class="nav-buttons">
+            <a href="about.php" class="nav-button">About Us</a>
+            <a href="productline.php" class="nav-button">Products</a>
+            <a href="reviews.php" class="nav-button">Reviews</a>
+            <a href="contact.php" class="nav-button">Contact Us</a>
+        </div>
 
-        <a href="cart.php" class="icon-link">
-          <img src="basket.png" alt="Cart" class="nav-icon">
-          <?php if($cartCount > 0): ?>
-            <span class="cart-count-badge"><?php echo $cartCount; ?></span>
-          <?php endif; ?>
-        </a>
-      </div>
-    </div>
-  </div>
+        <!-- RIGHT SIDE: Login / Create Account / Basket / Search -->
+        <div class="right-controls" id="rightControls">
+
+            <!-- Default icons (visible normally) -->
+            <div class="right-default" id="rightDefault">
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <span class="welcome-msg">Hi <?php echo htmlspecialchars($_SESSION['first_name']); ?>!</span>
+                    <a href="logout.php" class="login-btn">Logout</a>
+                <?php else: ?>
+                    <a href="login.php" class="login-btn">Log in</a>
+                    <a href="create-account.php" class="create-btn">
+                        <img src="images/account.png" alt="" class="btn-icon">
+                        Create Account
+                    </a>
+                <?php endif; ?>
+
+                <a href="cart.php" class="icon-link">
+                    <img src="images/basket.png" alt="Basket" class="nav-icon">
+                </a>
+
+                <div class="icon-link search-icon" id="searchToggle">
+                    <img src="images/search.png" alt="Search" class="nav-icon">
+                </div>
+
+                <!-- DARK MODE TOGGLE -->
+                <button id="themeToggle" class="icon-link" aria-label="Toggle theme">
+                    🌙
+                </button>
+            </div>
+
+            <!-- Search bar overlay (hidden until search opens) -->
+            <div id="searchBar" class="search-bar-overlay">
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <!-- Close icon (only visible when search is open) -->
+            <div class="icon-link search-close" id="searchClose">
+                <img src="images/search.png" alt="Close Search" class="nav-icon">
+            </div>
+        </div>
+    </div> <!-- End of NAVBAR -->
 
   <!-- ======= PAGE CONTENT ======= -->
   <div class="page">
