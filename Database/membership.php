@@ -1,0 +1,686 @@
+<?php
+session_start();
+$isLoggedIn = isset($_SESSION['user_id']);
+$userName   = $isLoggedIn ? ($_SESSION['first_name'] ?? 'User') : '';
+
+if (!isset($_SESSION['cart'])) { $_SESSION['cart'] = []; }
+$cartCount = count($_SESSION['cart']);
+
+$successMsg = '';
+$errorMsg   = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $fullName = trim($_POST['full_name'] ?? '');
+    $email    = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    if (empty($fullName) || empty($email) || empty($password)) {
+        $errorMsg = 'All fields are required.';
+    } elseif (strlen($password) < 6) {
+        $errorMsg = 'Password must be at least 6 characters.';
+    } else {
+        // Connect to DB (adjust credentials to match your project's db_connect.php)
+        $host = 'localhost';
+        $db   = 'everywear';
+        $user = 'root';
+        $pass = '';
+
+        try {
+            $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Check if email already exists
+            $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            if ($stmt->fetch()) {
+                $errorMsg = 'This email is already registered.';
+            } else {
+                $hashed = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare("INSERT INTO users (full_name, email, password, is_member, created_at) VALUES (?, ?, ?, 1, NOW())");
+                $stmt->execute([$fullName, $email, $hashed]);
+                $successMsg = 'Welcome to EveryWear! Start exploring and enjoy exclusive member benefits.';
+            }
+        } catch (PDOException $e) {
+            $errorMsg = 'Something went wrong. Please try again later.';
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet"/>
+
+    <title>Membership</title>
+<link rel="icon" type="image/png" href="images/logo.png">
+</head>
+<style>   
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+body {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: linear-gradient(135deg, #0f172a, #1e293b, #020617);
+  overflow-x: hidden; 
+}
+    .navbar {
+      width: 100%;
+      background: white;
+      height: auto;
+      padding: 4px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      overflow: visible;
+    }
+
+    .navbar::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, #30CDF5, #00FAA0);
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 100%;
+      min-width: 120px;
+    }
+
+    .logo-section img {
+      height: 90px; 
+    }
+
+    .site-logo {
+      height: 90px;
+      width: auto;
+      margin-left: 18px;
+      margin-right: 0;
+    }
+
+    .logo-link {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .logo-link:focus { outline: none; }
+
+    .logo-link:focus-visible {
+      outline: 3px solid rgba(75,116,255,0.25);
+      border-radius: 6px;
+    }
+
+    .logo-link:active { outline: none; }
+
+    .brand {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #28d5d5, #4a99ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      display: inline-block;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 20px;
+      margin-left: 0;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .nav-buttons a.nav-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 25px;
+      background: #e7e9eb;
+      border-radius: 7px;
+      text-decoration: none;
+      color: inherit;
+      font-size: 14px;
+      transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+      transform: translateY(-2px);
+    }
+
+    .nav-buttons a.nav-button:hover,
+    .nav-buttons a.nav-button:focus {
+      background: linear-gradient(to right, #30CDF5, #00FAA0);
+      color: #000;
+      transform: translateY(-2px) scale(1.07);
+      outline: none;
+    }
+
+    .nav-buttons a.nav-button.active {
+      background-color: #4b74ff;
+      color: #ffffff;
+    }
+
+    .right-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      margin-left: auto;
+      position: relative;
+    }
+
+    .right-default {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .login-btn {
+      background: #4b74ff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+      transform: translateY(-2px);
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(to right, #30CDF5, #00FAA0);
+      color: #000;
+      transform: translateY(-2px) scale(1.07);
+    }
+
+    .login-btn:active { transform: translateY(0); }
+
+    .create-btn {
+      background: black;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+      transform: translateY(-2px);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .create-btn:hover {
+      background: linear-gradient(to right, #30CDF5, #00FAA0);
+      color: #000;
+      transform: translateY(-2px) scale(1.07);
+    }
+
+    .create-btn:active { transform: translateY(0); }
+
+    .btn-icon {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+    }
+
+    .login-btn,
+    .create-btn {
+      text-decoration: none;
+    }
+
+    .icon-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 36px;
+      width: 36px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      position: relative;
+    }
+
+    .icon-link:hover {
+      transform: scale(1.15);
+      opacity: 0.9;
+    }
+
+    .nav-icon {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .cart-item-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 15px;
+      height: 15px;
+      padding: 0 3px;
+      background: #e35f26;
+      border-radius: 999px;
+      font-size: 11px;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+    }
+
+    @media (max-width: 768px) {
+      .site-logo, .logo-section img {
+        height: 64px;
+      }
+      .navbar {
+        height: auto;
+      }
+      .logo-section { min-width: 140px; }
+      .nav-buttons {
+        display: none;
+      }
+    }
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  min-height: calc(80vh - 160px); 
+}
+main::before {
+  content: "";
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #38bdf8, transparent);
+  top: -100px;
+  left: -100px;
+  filter: blur(120px);
+}
+.container {
+  width: 320px;
+  padding: 1.5rem;
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 30px rgba(56, 189, 248, 0.2);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.container h2 {
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.input-group {
+  position: relative;
+  margin-bottom: 15px;
+}
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  border: none;
+  outline: none;
+}
+.input-group label {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  color: #aaa;
+  font-size: 12px;
+  transition: 0.3s;
+}
+.input-group input:focus + label,
+.input-group input:valid + label {
+  top: -8px;
+  font-size: 10px;
+  color: #38bdf8;
+}
+.btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.message {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+.message.show {
+  opacity: 1;
+  transform: translateY(0);
+  color: #38bdf8;
+}
+.btn:active {
+  transform: scale(0.96);
+}
+.container.success {
+  box-shadow: 0 0 40px rgba(56, 189, 248, 0.6);
+  border: 1px solid #38bdf8;
+}
+footer {
+  background: #111827;
+  color: #ffffff;
+  padding: 3rem 0 2rem;
+  margin-top: 3rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+  padding: 0 1.5rem; 
+  box-sizing: border-box;
+}
+.footer-col h4 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+.footer-col p {
+  font-size: 0.9rem;
+  color: #d1d5db;
+}
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1.9;
+}
+.footer-col ul li a {
+  color: #d1d5db;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: 0.2s;
+}
+.footer-col ul li a:hover {
+  color: #ffffff;
+}
+.footer-socials {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.8rem;
+}
+.footer-socials i {
+  font-size: 1.35rem;
+  color: #f3f4f6;
+  background: #1f2937;
+  padding: 0.6rem;
+  border-radius: 50%;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+.footer-socials i:hover {
+  background: #f3f4f6;
+  color: #111827;
+  transform: translateY(-2px);
+}
+.footer-col-right {
+  text-align: right;
+}
+.footer-col-right .footer-socials {
+  justify-content: flex-end;
+}
+.footer-app {
+  margin-top: 1.4rem;
+}
+.footer-app h5 {
+  font-size: 0.95rem;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+}
+.store-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+.store-badges img {
+  width: 150px;
+  height: auto;
+  display: block;
+  border-radius: 0.35rem;
+}
+.footer-bottom {
+  text-align: center;
+  margin-top: 2.4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.85rem;
+  color: #d1d5db;
+}
+@media (max-width: 760px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 520px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+  }
+  .footer-col {
+    text-align: center;
+  }
+  .footer-socials {
+    justify-content: center;
+  }
+  .footer-col-right {
+    text-align: center;
+  }
+  .footer-col-right .footer-socials {
+    justify-content: center;
+  }
+  .store-badges {
+    align-items: center;
+  }
+}
+.search-heading {
+    color: #6f6f6f;
+    text-align: center;
+    font-style: italic;
+    font-size: 30px;      
+    margin-top: 10px;     
+    margin-bottom: 5px;    
+}
+.brand-values {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: -20px;
+    width: 95%;
+}
+.brand-values .value p {
+    margin-top: -15px;
+}
+.brand-values .value {
+    max-width: 300px;
+    text-align: center;
+}
+.hero h2 {
+    font-size: 36px;
+    margin-top: 67px;
+}
+.banner-link {
+    text-decoration: none;
+    color: white;
+}
+.scroll-banner {
+    width: 100%;
+    background: linear-gradient(to right, #30CDF5, #00FAA0);
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 6px 0; 
+}
+.scroll-track {
+    display: inline-flex;
+    gap: 40px; 
+    animation: marquee 15s linear infinite;
+}
+.scroll-track span {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+}
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+</style>
+</head>
+<body>
+     <!-- TOP NAVIGATION -->
+    <div class="navbar">
+
+        <!-- LOGO -->
+        <div class="logo-section">
+            <a href="index.php" class="logo-link" aria-label="Go to homepage">
+                <img src="images/logo.png" loading="eager" alt="EveryWear Logo" width="120" height="90" class="site-logo">
+            </a>
+        </div>
+
+        <!-- NAV BUTTONS -->
+        <div class="nav-buttons">
+            <a href="about.php" class="nav-button">About Us</a>
+            <a href="productline.php" class="nav-button">Products</a>
+            <a href="reviews.php" class="nav-button">Reviews</a>
+            <a href="contact.php" class="nav-button">Contact Us</a>
+        </div>
+
+        <!-- RIGHT SIDE (matches productline.php) -->
+        <div class="right-controls" id="rightControls">
+            <div class="right-default" id="rightDefault">
+                <?php if ($isLoggedIn): ?>
+                    <span class="welcome-msg">Hi <?php echo htmlspecialchars($userName); ?>!</span>
+                    <a href="logout.php" class="login-btn">Logout</a>
+                <?php else: ?>
+                    <a href="login.php" class="login-btn">Log in</a>
+                    <a href="create-account.php" class="create-btn">
+                        <img src="images/account.png" alt="" class="btn-icon">
+                        Create Account
+                    </a>
+                <?php endif; ?>
+
+                
+            </div>
+        </div>
+    </div> <!-- End of NAVBAR -->
+
+    <main>
+        <div class="container <?php echo $successMsg ? 'success' : ''; ?>">
+            <h2>Join EveryWear</h2>
+
+            <form method="POST" action="membership.php">
+                <div class="input-group">
+                    <input type="text" name="full_name" required value="<?php echo htmlspecialchars($_POST['full_name'] ?? ''); ?>">
+                    <label>Full Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" name="email" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
+                    <label>Email Address</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" name="password" required minlength="6">
+                    <label>Password</label>
+                </div>
+                <button type="submit" class="btn">Become a Member</button>
+
+                <?php if ($successMsg): ?>
+                    <div class="message success"><?php echo htmlspecialchars($successMsg); ?></div>
+                <?php elseif ($errorMsg): ?>
+                    <div class="message error"><?php echo htmlspecialchars($errorMsg); ?></div>
+                <?php endif; ?>
+            </form>
+        </div>
+    </main>
+
+     <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="productline.php?category=Tops">Tops</a></li>
+                    <li><a href="productline.php?category=Bottoms">Bottoms</a></li>
+                    <li><a href="productline.php?category=Outerwear">Outerwear</a></li>
+                    <li><a href="productline.php?category=Footwear">Footwear</a></li>
+                    <li><a href="productline.php?category=Accessories">Accessories</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="delivery.php">Delivery & Returns</a></li>
+                    <li><a href="login.php">10% Student Discount</a></li>
+                    <li><a href="FAQ.php">FAQs</a></li>
+                    <li><a href="login.php">My Account</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Join Now</h4>
+                <ul>
+                    <li><a href="membership.php">Become a member today and get exclusive benefits!</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col footer-col-right">
+                <h4>EveryWear</h4>
+                <p>Designed for all.</p>
+                <p>Follow Us On:</p>
+                <div class="footer-socials">
+                    <i class="ri-instagram-line"></i>
+                    <i class="ri-tiktok-line"></i>
+                    <i class="ri-youtube-line"></i>
+                </div>
+
+                <div class="footer-app">
+                    <h5>Download Our App</h5>
+                    <div class="store-badges">
+                        <a href="#">
+                            <img src="images/image1.png" alt="Get it on Google Play">
+                        </a>
+                        <a href="#">
+                            <img src="images/image2.png" alt="Download on the App Store">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 EveryWear. All rights reserved.
+        </div>
+    </footer>
