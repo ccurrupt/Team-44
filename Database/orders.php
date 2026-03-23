@@ -581,5 +581,6 @@ foreach ($_SESSION['cart'] as $item) {
     });
     </script>
 
+    <?php include 'chatbot-widget.php'; ?>
 </body>
 </html>
