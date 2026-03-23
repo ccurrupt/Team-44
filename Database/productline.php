@@ -1450,9 +1450,9 @@ foreach ($_SESSION['cart'] as $item) {
       <div class="footer-col">
         <h4>Customer Service</h4>
         <ul>
-          <li><a href="#">Delivery &amp; Returns</a></li>
+          <li><a href="delivery.php">Delivery &amp; Returns</a></li>
           <li><a href="#">10% Student Discount</a></li>
-          <li><a href="#">FAQs</a></li>
+          <li><a href="FAQ.php">FAQs</a></li>
           <li><a href="#">My Account</a></li>
         </ul>
       </div>
@@ -1460,7 +1460,7 @@ foreach ($_SESSION['cart'] as $item) {
       <div class="footer-col">
         <h4>Join Now</h4>
         <ul>
-          <li><a href="#">Become a member today and get exclusive benefits!</a></li>
+          <li><a href="membership.php">Become a member today and get exclusive benefits!</a></li>
         </ul>
       </div>
 
@@ -2018,5 +2018,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
   </script>
+  
+  <?php include 'chatbot-widget.php'; ?>
 </body>
 </html>
