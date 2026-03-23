@@ -14,7 +14,7 @@ if (empty($email) || empty($password)) {
 
 try {
     // Prepare and execute query using PDO
-    $sql = "SELECT user_id, first_name, last_name, email, password FROM Users WHERE email = :email";
+    $sql = "SELECT user_id, first_name, last_name, email, password, role FROM Users WHERE email = :email";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
     $stmt->execute();
@@ -36,13 +36,14 @@ try {
     
     // Set session variables
     $_SESSION["user_id"] = $user["user_id"];
-    $_SESSION["first_name"] = $user["first_name"];
-    $_SESSION["last_name"] = $user["last_name"];
-    $_SESSION["email"] = $user["email"];
-    $_SESSION["full_name"] = $user["first_name"] . ' ' . $user["last_name"];
+	$_SESSION["first_name"] = $user["first_name"];
+	$_SESSION["last_name"] = $user["last_name"];
+	$_SESSION["email"] = $user["email"];
+	$_SESSION["full_name"] = $user["first_name"] . ' ' . $user["last_name"];
+	$_SESSION["is_admin"] = ($user["role"] === 'admin');
     
     // Redirect to home page
-    header("Location: index.php");
+    header("Location: /index.php");
     exit();
     
 } catch(PDOException $e) {
