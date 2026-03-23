@@ -364,9 +364,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
             <div class="footer-col">
                 <h4>Customer Service</h4>
                 <ul>
-                    <li><a href="contact.php">Delivery &amp; Returns</a></li>
+                    <li><a href="delivery.php">Delivery &amp; Returns</a></li>
                     <li><a href="login.php">10% Student Discount</a></li>
-                    <li><a href="contact.php">FAQs</a></li>
+                    <li><a href="FAQ.php">FAQs</a></li>
                     <li><a href="login.php">My Account</a></li>
                 </ul>
             </div>
@@ -458,5 +458,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit'])) {
     });
     </script>
 
+                              
+      <?php include 'chatbot-widget.php'; ?>                          
 </body>
 </html>
